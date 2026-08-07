@@ -8,7 +8,7 @@ use EAdmin\Core\Utils\TidyUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class ComponentController extends AbstractController {
+class ComponentController extends AbstractController {
     public function __construct(private ComponentRenderer $renderer) {}
 
     public function renderComponent(Component $component): Response
