@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use EAdmin\Core\ComponentRenderer;
+use EAdmin\Core\Controller\ComponentController;
 use EAdmin\Core\Routing\ComponentControllerLoader;
 use EAdmin\Core\Twig\Extensions\EAdminExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
@@ -12,8 +13,12 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return function (ContainerConfigurator $container): void {
     $container->services()
+        ->set(ComponentController::class)
+        ->args([ComponentRenderer::class]);
+
+    $container->services()
         ->set(ComponentControllerLoader::class)
-        ->arg('$routes', "%eadmin.component_controller_routes%")
+        ->args([['$routes', "%eadmin.component_controller_routes%"], ComponentController::class])
         ->tag("routing.loader");
 
     $container->services()
