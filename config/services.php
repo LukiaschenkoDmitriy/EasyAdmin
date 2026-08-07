@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Twig\Environment;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 return function (ContainerConfigurator $container): void {
     $container->services()
@@ -18,7 +19,7 @@ return function (ContainerConfigurator $container): void {
 
     $container->services()
         ->set(ComponentControllerLoader::class)
-        ->args([['$routes', "%eadmin.component_controller_routes%"], service(ComponentController::class)])
+        ->args([param('eadmin.component_controller_routes'), service(ComponentController::class)])
         ->tag("routing.loader");
 
     $container->services()
