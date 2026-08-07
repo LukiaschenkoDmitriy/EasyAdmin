@@ -51,10 +51,19 @@ class EAdminExtension extends AbstractExtension
     private function map(string $path, string $format): string
     {
         $path = str_replace('@EAdmin/', '', $path);
-        $path = preg_replace('/\.html\.twig$/', '.'.$format, $path);
-        $path = "eadmin/" . $path;
+        
+        $newFormat = preg_replace('/\.html\.twig$/', '.'.$format, $path);
+        $newFormat = "eadmin/" . $newFormat;
 
-        $asset = $this->assetMapper->getAsset($path);
+        $asset = $this->assetMapper->getAsset($newFormat);
+
+        if (!$asset && $format == "css") {
+            $newFormat = preg_replace('/\.html\.twig$/', '.scss', $path);
+
+            $newFormat = "eadmin/" . $newFormat;
+
+            $asset = $this->assetMapper->getAsset($newFormat);
+        }
 
         if (!$asset) return "";
 
