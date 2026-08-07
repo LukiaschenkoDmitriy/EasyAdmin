@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Twig\Environment;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 return function (ContainerConfigurator $container): void {
     $container->services()
@@ -18,7 +19,7 @@ return function (ContainerConfigurator $container): void {
 
     $container->services()
         ->set(EAdminExtension::class)
-        ->args([service(AssetMapperInterface::class)])
+        ->args([service(AssetMapperInterface::class), param("kernel.project_dir")])
         ->tag("twig.extension");
 
     $container->services()

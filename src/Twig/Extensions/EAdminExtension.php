@@ -9,7 +9,7 @@ use Twig\TwigFunction;
 class EAdminExtension extends AbstractExtension
 {
     private array $manifestCache = [];
-    public function __construct(private AssetMapperInterface $assetMapper) {}
+    public function __construct(private AssetMapperInterface $assetMapper, private string $projectDir) {}
 
     public function getFunctions(): array
     {
@@ -87,7 +87,9 @@ class EAdminExtension extends AbstractExtension
         $entryKey = "src/EAdmin/" . preg_replace('/\.html\.twig$/', '.ts', $path);
         $tsManifest = $this->getManifest();
 
-        if ($tsManifest[$entryKey]) {
+        var_dump($tsManifest);
+
+        if (array_key_exists($entryKey, $tsManifest)) {
             $scripts .= sprintf('<script type="module" src="/build/%s"></script>', $tsManifest[$entryKey]['file']);
         }
 
@@ -97,7 +99,7 @@ class EAdminExtension extends AbstractExtension
     private function getManifest(): array
     {
         if (empty($this->manifestCache)) {
-            $manifestPath = 'public/build/.vite/manifest.json';
+            $manifestPath = $this->projectDir.'/public/build/.vite/manifest.json';
             $this->manifestCache = file_exists($manifestPath)
                 ? json_decode(file_get_contents($manifestPath), true)
                 : [];
