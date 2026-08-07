@@ -11,7 +11,7 @@ class ComponentControllerLoader extends Loader
 {
     private bool $loaded = false;
 
-    public function __construct(private readonly array $routes, private readonly ComponentController $controller)
+    public function __construct(private readonly array $routes)
     {
         parent::__construct();
     }
