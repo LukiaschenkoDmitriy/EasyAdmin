@@ -2,6 +2,7 @@
 
 namespace EAdmin\Core\Routing;
 
+use EAdmin\Core\Controller\ComponentController;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -10,7 +11,7 @@ class ComponentControllerLoader extends Loader
 {
     private bool $loaded = false;
 
-    public function __construct(private readonly array $routes)
+    public function __construct(private readonly array $routes, private readonly ComponentController $controller)
     {
         parent::__construct();
     }
@@ -26,7 +27,7 @@ class ComponentControllerLoader extends Loader
         foreach ($this->routes as $route) {
             $collection->add($route['name'], new Route(
                 $route['path'],
-                defaults: ['_controller' => $route['class']],
+                defaults: ['_controller' => fn() => $this->controller->renderComponent(new $route["class"]())],
                 methods: $route['methods'],
             ));
         }
