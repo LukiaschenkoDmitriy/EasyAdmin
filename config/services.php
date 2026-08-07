@@ -12,10 +12,10 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 return function (ContainerConfigurator $container): void {
-    $container->services()
-        ->set(ComponentControllerLoader::class)
-        ->args([param('eadmin.component_controller_routes')])
-        ->tag("routing.loader");
+    // $container->services()
+    //     ->set(ComponentControllerLoader::class)
+    //     ->args([param('eadmin.component_controller_routes')])
+    //     ->tag("routing.loader");
 
     $container->services()
         ->set(EAdminExtension::class)
