@@ -48,10 +48,18 @@ class TSInstallCommand extends Command {
         }
 
         if (!$io->confirm('Do you want install node packages?', true)) {
-            $io->note(sprintf('Skipped.'));
+            $io->note('Skipped.');
         } else {
-            $process = new Process(["npm", "install"], $projectDir);
-            $process->mustRun();
+            $io->section('Installing npm dependencies...');
+
+            $process = new Process(['npm', 'install'], $projectDir);
+            $process->setTimeout(150);
+
+            $process->mustRun(function (string $type, string $buffer) use ($output): void {
+                $output->write($buffer);
+            });
+
+            $io->success('Dependencies installed.');
         }
 
         return Command::SUCCESS;
