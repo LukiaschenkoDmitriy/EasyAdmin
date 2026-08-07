@@ -11,13 +11,23 @@ abstract class Component {
 
     public function template(): string
     {
-        $necessaryFile = preg_replace('/\.php$/', '.html.twig', (new \ReflectionClass(static::class))->getFileName()); 
+        $filePath = (new \ReflectionClass(static::class))->getFileName();
+        $necessaryFile = preg_replace('/\.php$/', '.html.twig', $filePath);
 
         if (!file_exists($necessaryFile)) {
             throw new \Exception("File: " . $necessaryFile . " necessary to create the component.");
         }
 
-        return preg_replace('/\.php$/', '.html.twig', "@EAdmin" . explode("EAdmin", (new \ReflectionClass(static::class))->getFileName())[1]);
+        $marker = '/EAdmin/';
+        $pos = strrpos($filePath, $marker);
+
+        if ($pos === false) {
+            throw new \Exception("Could not resolve EAdmin-relative path for: " . $filePath);
+        }
+
+        $relativePath = substr($filePath, $pos + strlen($marker));
+
+        return preg_replace('/\.php$/', '.html.twig', '@EAdmin/' . $relativePath);
     }
 
     public function context(): array
