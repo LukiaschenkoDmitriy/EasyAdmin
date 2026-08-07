@@ -87,8 +87,6 @@ class EAdminExtension extends AbstractExtension
         $entryKey = "src/EAdmin/" . preg_replace('/\.html\.twig$/', '.ts', $path);
         $tsManifest = $this->getManifest();
 
-        var_dump($tsManifest);
-
         if (array_key_exists($entryKey, $tsManifest)) {
             $scripts .= sprintf('<script type="module" src="/build/%s"></script>', $tsManifest[$entryKey]['file']);
         }
