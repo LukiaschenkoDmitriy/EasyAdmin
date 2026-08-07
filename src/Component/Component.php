@@ -3,13 +3,22 @@
 namespace EAdmin\Core\Component;
 
 abstract class Component {
-    public function __construct(protected array $context = []) {}
+    public function __construct(protected array $context = [], protected array $slots = []) {}
     public function alias(): ?string
     {
         return null;
     }
 
-    abstract public function template(): string;
+    public function template(): string
+    {
+        $necessaryFile = preg_replace('/\.php$/', '.html.twig', (new \ReflectionClass(static::class))->getFileName()); 
+
+        if (!file_exists($necessaryFile)) {
+            throw new \Exception("File: " . $necessaryFile . " necessary to create the component.");
+        }
+
+        return preg_replace('/\.php$/', '.html.twig', "@EAdmin" . explode("EAdmin", (new \ReflectionClass(static::class))->getFileName())[1]);
+    }
 
     public function context(): array
     {
@@ -31,7 +40,12 @@ abstract class Component {
     /** @return array<Component> */
     public function slots(): array
     {
-        return [];
+        return $this->slots;
+    }
+
+    public function setSlots(array $slots): void
+    {
+        $this->slots = $slots;
     }
 
     public function allContext(): array

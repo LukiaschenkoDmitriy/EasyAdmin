@@ -3,7 +3,6 @@
 namespace EAdmin\Core;
 
 use EAdmin\Core\Component\Component;
-use EAdmin\Core\Utils\TidyUtil;
 use Twig\Environment;
 
 class ComponentRenderer {

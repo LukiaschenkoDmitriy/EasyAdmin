@@ -1,5 +1,7 @@
 {
-    "name": "dmytrii/easy-admin",
+    "name": "easy-admin/core",
+    "description": "Symfony Admin Builder",
+    "license": "MIT",
     "require": {
         "symfony/dependency-injection": "^8.1",
         "symfony/http-foundation": "^8.1",

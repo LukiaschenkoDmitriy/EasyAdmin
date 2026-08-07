@@ -15,12 +15,16 @@ class SlotExtension extends AbstractExtension
     {
         return [
             new TwigFunction('slot', [$this, 'render'], ['needs_context' => true, 'is_safe' => ['html']]),
-            new TwigFunction("render", [$this, "dryRender"], ["is_safe" => ["html"]])
+            new TwigFunction("render", [$this, "dryRender"], ['needs_context' => true, "is_safe" => ["html"]])
         ];
     }
 
-    public function dryRender(Component|array $slot): string
+    public function dryRender(array $context, Component|array|null $slot = null): string
     {
+        if ($slot == null) {
+            return $this->renderer->render($context["slots"]);
+        }
+
         return $this->renderer->render($slot);
     }
 
