@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use EAdmin\Core\ComponentRenderer;
-use EAdmin\Core\Controller\ComponentController;
 use EAdmin\Core\Routing\ComponentControllerLoader;
 use EAdmin\Core\Twig\Extensions\EAdminExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;

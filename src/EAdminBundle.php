@@ -12,7 +12,6 @@ class EAdminBundle extends AbstractBundle {
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
-        $container->addCompilerPass(new ComponentControllerCompiler());
     }
 
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
