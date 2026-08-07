@@ -13,7 +13,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 return function (ContainerConfigurator $container): void {
     $container->services()
         ->set(ComponentControllerLoader::class)
-        ->arg('$routes', "%admin.component_controller_routes%")
+        ->arg('$routes', "%eadmin.component_controller_routes%")
         ->tag("routing.loader");
 
     $container->services()
