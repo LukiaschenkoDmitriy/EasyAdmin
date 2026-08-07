@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use EAdmin\Core\Command\TSInstallCommand;
 use EAdmin\Core\ComponentRenderer;
 use EAdmin\Core\Twig\Extensions\EAdminExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
@@ -10,6 +11,11 @@ use Twig\Environment;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return function (ContainerConfigurator $container): void {
+    $container->services()
+        ->set(TSInstallCommand::class)
+        ->args([service('kernel')])
+        ->tag('console.command');
+
     $container->services()
         ->set(EAdminExtension::class)
         ->args([service(AssetMapperInterface::class)])
