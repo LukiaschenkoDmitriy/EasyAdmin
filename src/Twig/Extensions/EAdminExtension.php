@@ -56,6 +56,8 @@ class EAdminExtension extends AbstractExtension
 
         $asset = $this->assetMapper->getAsset($path);
 
+        if (!$asset) return "";
+
         $output = $format == "css" ? sprintf('<link rel="stylesheet" href="%s">', $asset->publicPath) : sprintf('<script src="%s"/>', $asset->publicPath);
 
         return $asset ? $output : '';
