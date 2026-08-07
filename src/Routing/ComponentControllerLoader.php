@@ -27,7 +27,7 @@ class ComponentControllerLoader extends Loader
         foreach ($this->routes as $route) {
             $collection->add($route['name'], new Route(
                 $route['path'],
-                defaults: ['_controller' => fn() => $this->controller->renderComponent(new $route["class"]())],
+                defaults: ['_controller' => $route["class"]],
                 methods: $route['methods'],
             ));
         }

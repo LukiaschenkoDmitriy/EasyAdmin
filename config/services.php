@@ -14,10 +14,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 return function (ContainerConfigurator $container): void {
     $container->services()
-        ->set(ComponentController::class)
-        ->args([service(ComponentRenderer::class)]);
-
-    $container->services()
         ->set(ComponentControllerLoader::class)
         ->args([param('eadmin.component_controller_routes'), service(ComponentController::class)])
         ->tag("routing.loader");

@@ -2,16 +2,16 @@
 
 namespace EAdmin\Core\Controller;
 
-use EAdmin\Core\Component\Component;
+use EAdmin\Core\Component\ComponentInterface;
 use EAdmin\Core\ComponentRenderer;
 use EAdmin\Core\Utils\TidyUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class ComponentController extends AbstractController {
-    public function __construct(private ComponentRenderer $renderer) {}
+abstract class ComponentController extends AbstractController {
+    public function __construct(protected ComponentRenderer $renderer) {}
 
-    public function renderComponent(Component $component): Response
+    public function renderComponent(ComponentInterface $component): Response
     {
         $view = TidyUtil::cleanAndRepairHTML($this->renderer->render($component));
         return new Response($view, 200);
