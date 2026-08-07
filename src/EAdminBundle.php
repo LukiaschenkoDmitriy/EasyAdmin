@@ -2,18 +2,12 @@
 
 namespace EAdmin\Core;
 
-use EAdmin\Core\DependencyInjection\Compiler\ComponentControllerCompiler;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 
 class EAdminBundle extends AbstractBundle {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-    }
-
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         if ($container->hasExtension("framework")) {
