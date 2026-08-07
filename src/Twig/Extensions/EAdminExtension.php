@@ -8,6 +8,7 @@ use Twig\TwigFunction;
 
 class EAdminExtension extends AbstractExtension
 {
+    private array $manifestCache = [];
     public function __construct(private AssetMapperInterface $assetMapper) {}
 
     public function getFunctions(): array
@@ -20,17 +21,17 @@ class EAdminExtension extends AbstractExtension
 
     public function renderStyles(array $context): string
     {
-        return $this->render($context, "css");
+        return $this->render($context, "styles");
     }
 
     public function renderScripts(array $context): string
     {
-        return $this->render($context, "js");
+        return $this->render($context, "scripts");
     }
 
     private function render(array $context, string $format) {
         $templates = $context['_eadmin']['template'] ?? null;
-        $custom = $format == "css" ? $context["_eadmin"]["custom_styles"] : $context["_eadmin"]["custom_scripts"];
+        $custom = $format == "styles" ? $context["_eadmin"]["custom_styles"] : $context["_eadmin"]["custom_scripts"];
 
         $templates = array_values(array_unique($templates));
         $custom = array_values(array_unique($custom));
@@ -38,37 +39,70 @@ class EAdminExtension extends AbstractExtension
         $output = "";
 
         foreach($templates as $template) {
-            $output .= $template ? $this->map($template, $format) : "";
+            $output .= $format == "styles" ? $this->mapStyles($template) : $this->mapScripts($template);
         }
 
         foreach ($custom as $value) {
-            $output .= $this->map($value, $format);
+            $output .= $format == "styles" ? $this->mapStyles($value) : $this->mapScripts($value);
         }
 
         return $output;
     }
 
-    private function map(string $path, string $format): string
+    private function mapStyles(string $path): string
     {
         $path = str_replace('@EAdmin/', '', $path);
         
-        $newFormat = preg_replace('/\.html\.twig$/', '.'.$format, $path);
-        $newFormat = "eadmin/" . $newFormat;
+        $cssFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.css', $path);
+        $scssFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.scss', $path);
 
-        $asset = $this->assetMapper->getAsset($newFormat);
+        $cssAsset = $this->assetMapper->getAsset($cssFormat);
+        $scssAsset = $this->assetMapper->getAsset($scssFormat);
 
-        if (!$asset && $format == "css") {
-            $newFormat = preg_replace('/\.html\.twig$/', '.scss', $path);
+        $styles = "";
 
-            $newFormat = "eadmin/" . $newFormat;
-
-            $asset = $this->assetMapper->getAsset($newFormat);
+        if ($cssAsset) {
+            $styles .= sprintf('<link rel="stylesheet" href="%s">', $cssAsset->publicPath);
         }
 
-        if (!$asset) return "";
+        if ($scssAsset) {
+            $styles .= sprintf('<link rel="stylesheet" href="%s">', $scssAsset->publicPath);
+        }
 
-        $output = $format == "css" ? sprintf('<link rel="stylesheet" href="%s">', $asset->publicPath) : sprintf('<script src="%s"/>', $asset->publicPath);
+        return $styles;
+    }
 
-        return $asset ? $output : '';
+    private function mapScripts(string $path): string {
+        $path = str_replace('@EAdmin/', '', $path);
+        
+        $jsFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.js', $path);
+        $jsAsset = $this->assetMapper->getAsset($jsFormat);
+
+        $scripts = "";
+
+        if ($jsAsset) {
+            $scripts .= sprintf('<script src="%s"/>', $jsAsset->publicPath);
+        }
+
+        $entryKey = "src/EAdmin/" . preg_replace('/\.html\.twig$/', '.ts', $path);
+        $tsManifest = $this->getManifest();
+
+        if ($tsManifest[$entryKey]) {
+            $scripts .= sprintf('<script type="module" src="/build/%s"></script>', $tsManifest[$entryKey]['file']);
+        }
+
+        return $scripts;
+    }
+
+    private function getManifest(): array
+    {
+        if (empty($this->manifestCache)) {
+            $manifestPath = 'public/build/.vite/manifest.json';
+            $this->manifestCache = file_exists($manifestPath)
+                ? json_decode(file_get_contents($manifestPath), true)
+                : [];
+        }
+
+        return $this->manifestCache;
     }
 }
