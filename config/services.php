@@ -25,7 +25,7 @@ return function (ContainerConfigurator $container): void {
 
     $container->services()
         ->set(StyleExtension::class)
-        ->args([param("kernel.project_dir")])
+        ->args([service(AssetMapperInterface::class)])
         ->tag("twig.extension");
 
     $container->services()
