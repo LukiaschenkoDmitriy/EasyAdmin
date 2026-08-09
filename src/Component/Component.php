@@ -3,5 +3,5 @@
 namespace EAdmin\Core\Component;
 
 abstract class Component implements ComponentInterface {
-    use ComponentTrait;    
+    use ComponentTrait;
 }

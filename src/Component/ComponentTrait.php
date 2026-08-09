@@ -5,7 +5,7 @@ namespace EAdmin\Core\Component;
 use EAdmin\Core\Context\ContextInterface;
 
 trait ComponentTrait {
-    public ContextInterface $context;
+    public ?ContextInterface $context = null;
     /**
      * @var array<ComponentInterface>
      */
@@ -20,12 +20,12 @@ trait ComponentTrait {
         return ComponentHelper::getTemplate(static::class);
     }
 
-    public function context(): ContextInterface
+    public function context(): ?ContextInterface
     {
         return $this->context;
     }
 
-    public function setContext(ContextInterface $context): self
+    public function setContext(?ContextInterface $context): self
     {
         $this->context = $context;
         return $this;
