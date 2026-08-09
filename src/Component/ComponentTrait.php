@@ -2,10 +2,10 @@
 
 namespace EAdmin\Core\Component;
 
-use EAdmin\Core\Context\ContextInterface;
+use EAdmin\Core\Props\PropsInterface;
 
 trait ComponentTrait {
-    public ?ContextInterface $context = null;
+    public ?PropsInterface $props = null;
     /**
      * @var array<ComponentInterface>
      */
@@ -20,14 +20,14 @@ trait ComponentTrait {
         return ComponentHelper::getTemplate(static::class);
     }
 
-    public function context(): ?ContextInterface
+    public function props(): ?PropsInterface
     {
-        return $this->context;
+        return $this->props;
     }
 
-    public function setContext(?ContextInterface $context): self
+    public function setProps(?PropsInterface $props): self
     {
-        $this->context = $context;
+        $this->props = $props;
         return $this;
     }
 

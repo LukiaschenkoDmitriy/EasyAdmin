@@ -2,7 +2,7 @@
 
 namespace EAdmin\Core\Component;
 
-use EAdmin\Core\Context\ContextInterface;
+use EAdmin\Core\Props\PropsInterface;
 
 interface ComponentInterface {
     public function template(): string;
@@ -14,6 +14,6 @@ interface ComponentInterface {
     /** @return array<ComponentInterface> */
     public function slots(): array;
     public function setSlots(array $slots): self;
-    public function context(): ?ContextInterface;
-    public function setContext(?ContextInterface $context): self;
+    public function props(): ?PropsInterface;
+    public function setProps(?PropsInterface $props): self;
 }

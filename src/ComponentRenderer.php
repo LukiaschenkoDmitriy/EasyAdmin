@@ -11,9 +11,9 @@ class ComponentRenderer {
     public function render(array|ComponentInterface $slots): string
     {
         if (is_array($slots)) {
-            return implode("\n", array_map(fn(ComponentInterface $s) => $this->twig->render($s->template(), ["_self" => $s, "context" => $s->context(), "slots" => $s->slots()]), $slots));
+            return implode("\n", array_map(fn(ComponentInterface $s) => $this->twig->render($s->template(), ["_self" => $s, "props" => $s->props(), "slots" => $s->slots()]), $slots));
         }
 
-        return $this->twig->render($slots->template(), ["_self" => $slots, "context" => $slots->context(), "slots" => $slots->slots()]);
+        return $this->twig->render($slots->template(), ["_self" => $slots, "props" => $slots->props(), "slots" => $slots->slots()]);
     }
 }
