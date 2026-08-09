@@ -2,6 +2,8 @@
 
 namespace EAdmin\Core\Component;
 
+use EAdmin\Core\Context\ContextInterface;
+
 interface ComponentInterface {
     public function template(): string;
     public function alias(): ?string;
@@ -12,7 +14,6 @@ interface ComponentInterface {
     /** @return array<ComponentInterface> */
     public function slots(): array;
     public function setSlots(array $slots): self;
-    public function context(): array;
-    public function setContext(array $context): self;
-    public function allContext(): array;
+    public function context(): ContextInterface;
+    public function setContext(ContextInterface $context): self;
 }

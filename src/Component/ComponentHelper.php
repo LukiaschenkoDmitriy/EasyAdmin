@@ -24,31 +24,18 @@ final class ComponentHelper {
         return preg_replace('/\.php$/', '.html.twig', '@EAdmin/' . $relativePath);
     }
 
-    public static function getAllContext(ComponentInterface $component): array
-    {
-        return [
-            "_eadmin" => [
-                "template" => ComponentHelper::getRecursiveTemplates($component),
-                "custom_styles" => ComponentHelper::getRecursiveStyles($component),
-                "custom_scripts" => ComponentHelper::getRecursiveScripts($component)
-            ],
-            ...$component->context(),
-            "slots" => $component->slots()
-        ];
-    }
 
-
-    private static function getRecursiveTemplates(ComponentInterface $component): array
+    public static function getRecursiveTemplates(ComponentInterface $component): array
     {
         return array_merge([$component->template()], ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveTemplates($slot), $component->slots()));
     }
 
-    private static function getRecursiveStyles(ComponentInterface $component): array
+    public static function getRecursiveStyles(ComponentInterface $component): array
     {
         return array_merge($component->styles(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveStyles($slot), $component->slots()));;
     }
 
-    private static function getRecursiveScripts(ComponentInterface $component): array
+    public static function getRecursiveScripts(ComponentInterface $component): array
     {
         return array_merge($component->scripts(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveScripts($slot), $component->slots()));;
     }

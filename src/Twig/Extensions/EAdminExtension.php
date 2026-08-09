@@ -2,6 +2,8 @@
 
 namespace EAdmin\Core\Twig\Extensions;
 
+use EAdmin\Core\Component\ComponentHelper;
+use EAdmin\Core\Component\ComponentInterface;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -30,8 +32,13 @@ class EAdminExtension extends AbstractExtension
     }
 
     private function render(array $context, string $format) {
-        $templates = $context['_eadmin']['template'] ?? null;
-        $custom = $format == "styles" ? $context["_eadmin"]["custom_styles"] : $context["_eadmin"]["custom_scripts"];
+        /**
+         * @var ComponentInterface $component
+         */
+        $component = $context["_self"];
+        
+        $templates = ComponentHelper::getRecursiveTemplates($component);
+        $custom = $format == "styles" ? ComponentHelper::getRecursiveStyles($component) : ComponentHelper::getRecursiveScripts($component);
 
         $templates = array_values(array_unique($templates));
         $custom = array_values(array_unique($custom));

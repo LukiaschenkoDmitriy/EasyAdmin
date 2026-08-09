@@ -2,8 +2,13 @@
 
 namespace EAdmin\Core\Component;
 
+use EAdmin\Core\Context\ContextInterface;
+
 trait ComponentTrait {
-    private array $context = [];
+    public ContextInterface $context;
+    /**
+     * @var array<ComponentInterface>
+     */
     private array $slots = [];
     public function alias(): ?string
     {
@@ -15,12 +20,12 @@ trait ComponentTrait {
         return ComponentHelper::getTemplate(static::class);
     }
 
-    public function context(): array
+    public function context(): ContextInterface
     {
         return $this->context;
     }
 
-    public function setContext(array $context): self
+    public function setContext(ContextInterface $context): self
     {
         $this->context = $context;
         return $this;
@@ -48,10 +53,5 @@ trait ComponentTrait {
     {
         $this->slots = $slots;
         return $this;
-    }
-
-    public function allContext(): array
-    {
-        return ComponentHelper::getAllContext($this);
     }
 }
