@@ -20,12 +20,12 @@ trait ComponentTrait {
         return ComponentHelper::getTemplate(static::class);
     }
 
-    public function props(): ?PropsInterface
+    public function props(): PropsInterface|array|null
     {
         return $this->props;
     }
 
-    public function setProps(?PropsInterface $props): self
+    public function setProps(PropsInterface|array|null $props): self
     {
         $this->props = $props;
         return $this;
