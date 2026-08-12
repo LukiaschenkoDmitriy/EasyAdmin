@@ -15,6 +15,11 @@ final class ComponentHelper {
         $marker = '/EAdmin/';
         $pos = strrpos($filePath, $marker);
 
+        if ($pos == false) {
+            $marker = "/Base/";
+            $pos = strrpos($filePath, $marker);
+        }
+
         if ($pos === false) {
             throw new \Exception("Could not resolve EAdmin-relative path for: " . $filePath);
         }

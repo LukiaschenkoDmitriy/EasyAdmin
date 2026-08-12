@@ -2,7 +2,7 @@
 
 namespace EAdmin\Core\Twig\Extensions;
 
-use EAdmin\Core\Component\Component;
+use EAdmin\Core\Component\ComponentInterface;
 use EAdmin\Core\ComponentRenderer;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -19,7 +19,7 @@ class SlotExtension extends AbstractExtension
         ];
     }
 
-    public function dryRender(array $context, Component|array|null $slot = null): string
+    public function dryRender(array $context, ComponentInterface|array|null $slot = null): string
     {
         if ($slot == null) {
             return $this->renderer->render($context["slots"]);
@@ -39,7 +39,7 @@ class SlotExtension extends AbstractExtension
         if (is_numeric($slot)) {
             $currentSlot = $slots[$slot];
         } else {
-            $currentSlot = array_filter($slots, fn(Component $s) => $s->alias() == $slot)[$position];
+            $currentSlot = array_filter($slots, fn(ComponentInterface $s) => $s->alias() == $slot)[$position];
         }
 
         if (!$currentSlot) return "";

@@ -15,6 +15,7 @@ class EAdminBundle extends AbstractBundle {
                 "asset_mapper" => [
                     "paths" => [
                         "%kernel.project_dir%/src/EAdmin" => "eadmin",
+                        __DIR__ . "/Base" => "eadmin"
                     ]
                 ]
             ]);
@@ -24,6 +25,7 @@ class EAdminBundle extends AbstractBundle {
             $container->prependExtensionConfig('twig', [
                 'paths' => [
                     '%kernel.project_dir%/src/EAdmin' => 'EAdmin',
+                    __DIR__. "/Base" => "EAdmin"
                 ],
             ]);
         }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use EAdmin\Core\Command\TSInstallCommand;
+use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
 use EAdmin\Core\Twig\Extensions\ScriptExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
@@ -13,6 +14,8 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 return function (ContainerConfigurator $container): void {
+    $container->services()->set(Component::class)->autowire();
+
     $container->services()
         ->set(TSInstallCommand::class)
         ->args([service('kernel')])

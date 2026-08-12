@@ -2,6 +2,6 @@
 
 namespace EAdmin\Core\Component;
 
-abstract class Component implements ComponentInterface {
+class Component implements ComponentInterface {
     use ComponentTrait;
 }
