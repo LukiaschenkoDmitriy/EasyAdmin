@@ -3,11 +3,13 @@
 namespace EAdmin\Core\Base\EComponent\Input;
 
 use EAdmin\Core\Props\PropsInterface;
+use EAdmin\Core\Props\BaseProps;
 
 class InputProps implements PropsInterface {
     public function __construct(
+        public BaseProps $base = new BaseProps(),
+
         public InputType $type = InputType::TEXT,
-        public ?string $id = null,
         public ?string $name = null,
         public ?string $value = null,
         public ?string $placeholder = null,
@@ -28,15 +30,6 @@ class InputProps implements PropsInterface {
 
         public ?string $autocomplete = null,
         public ?string $accept = null,
-
-        public ?string $class = null,
-        public ?int $tabindex = null,
-        public ?string $title = null,
-        public ?string $ariaLabel = null,
-        public ?string $ariaDescribedby = null,
-
-        public ?string $form = null, 
-
-        public array $data = [],
+        public ?string $form = null,
     ){}
 }

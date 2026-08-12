@@ -1,6 +1,8 @@
+{% import "@EAdmin/Macro/base.twig" as attrs %}
+
 <input
+    {{ attrs.base_attribute(props.base) }}
     type="{{ props.type.value }}"
-    {% if props.id %}id="{{ props.id }}"{% endif %}
     {% if props.name %}name="{{ props.name }}"{% endif %}
     {% if props.value is not null %}value="{{ props.value }}"{% endif %}
     {% if props.placeholder %}placeholder="{{ props.placeholder }}"{% endif %}
@@ -21,14 +23,7 @@
 
     {% if props.autocomplete %}autocomplete="{{ props.autocomplete }}"{% endif %}
     {% if props.accept %}accept="{{ props.accept }}"{% endif %}
-
-    {% if props.tabindex is not null %}tabindex="{{ props.tabindex }}"{% endif %}
-    {% if props.title %}title="{{ props.title }}"{% endif %}
-    {% if props.ariaLabel %}aria-label="{{ props.ariaLabel }}"{% endif %}
-    {% if props.ariaDescribedby %}aria-describedby="{{ props.ariaDescribedby }}"{% endif %}
     {% if props.form %}form="{{ props.form }}"{% endif %}
 
-    {% for key, val in props.data %}data-{{ key }}="{{ val }}" {% endfor %}
-
-    class="eadmin-input{% if props.class %} {{ props.class }}{% endif %}"
+    class="eadmin-input{% if props.base.class %} {{ props.base.class }}{% endif %}"
 >
