@@ -1,7 +1,7 @@
-{% import "@EAdmin/Macro/base.twig" as attrs %}
+{% import "@EAdmin/_macros.twig" as m %}
 
 <input
-    {{ attrs.base_attribute(props.base) }}
+    {{ m.base_attribute(props.base) }}
     type="{{ props.type.value }}"
     {% if props.name %}name="{{ props.name }}"{% endif %}
     {% if props.value is not null %}value="{{ props.value }}"{% endif %}
