@@ -3,3 +3,4 @@ tests/eadmin_bundle_cache
 node_modules
 package-lock.json
 public
+var
