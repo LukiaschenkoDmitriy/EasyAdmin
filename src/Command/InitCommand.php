@@ -11,7 +11,9 @@ use Symfony\Component\Filesystem\Filesystem;
 #[AsCommand(name: 'eadmin:init', description: 'Init EAdmin command')]
 class InitCommand extends Command
 {
-    public function __construct(private readonly string $kernelDir) { }
+    public function __construct(private readonly string $kernelDir) {
+        parent::__construct();
+     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
