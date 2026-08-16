@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Command\TSInstallCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
@@ -18,6 +19,11 @@ return function (ContainerConfigurator $container): void {
 
     $container->services()
         ->set(TSInstallCommand::class)
+        ->args([param("kernel.project_dir")])
+        ->tag('console.command');
+
+    $container->services()
+        ->set(InitCommand::class)
         ->args([param("kernel.project_dir")])
         ->tag('console.command');
 
