@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"EAdmin\\Core\\Tests\\Command\\TSInstallCommandTest::testCopiesFilesAndSkipsNpmInstall":0.013,"EAdmin\\Core\\Tests\\Command\\TSInstallCommandTest::testAsksBeforeOverwritingExistingFile":0.001}}

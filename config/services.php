@@ -18,7 +18,7 @@ return function (ContainerConfigurator $container): void {
 
     $container->services()
         ->set(TSInstallCommand::class)
-        ->args([service('kernel')])
+        ->args([param("kernel.project_dir")])
         ->tag('console.command');
 
     $container->services()

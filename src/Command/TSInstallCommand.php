@@ -8,12 +8,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 
 #[AsCommand(name: 'eadmin:ts:install', description: 'Copy EAdmin config files (vite.config.ts, tsconfig.json) into the project root')]
 class TSInstallCommand extends Command {
-    public function __construct(private readonly KernelInterface $kernel)
+    public function __construct(private readonly string $kernelDir)
     {
         parent::__construct();
     }
@@ -23,7 +22,7 @@ class TSInstallCommand extends Command {
         $io = new SymfonyStyle($input, $output);
         $filesystem = new Filesystem();
 
-        $projectDir = $this->kernel->getProjectDir();
+        $projectDir = $this->kernelDir;
         $bundleDir = dirname(__DIR__);
 
         $filesToCopy = [

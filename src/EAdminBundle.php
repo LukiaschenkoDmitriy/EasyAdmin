@@ -15,7 +15,6 @@ class EAdminBundle extends AbstractBundle {
                 "asset_mapper" => [
                     "paths" => [
                         "%kernel.project_dir%/src/EAdmin" => "eadmin",
-                        __DIR__ . "/Base" => "eadmin"
                     ]
                 ]
             ]);
@@ -25,7 +24,6 @@ class EAdminBundle extends AbstractBundle {
             $container->prependExtensionConfig('twig', [
                 'paths' => [
                     '%kernel.project_dir%/src/EAdmin' => 'EAdmin',
-                    __DIR__. "/Base" => "EAdmin"
                 ],
             ]);
         }
@@ -33,8 +31,6 @@ class EAdminBundle extends AbstractBundle {
 
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        if (class_exists(\Twig\Environment::class)) {
-            $configurator->import(__DIR__ . "/../config/services.php");
-        }
+        $configurator->import(__DIR__ . "/../config/services.php");
     }
 }
