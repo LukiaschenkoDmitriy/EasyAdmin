@@ -30,7 +30,7 @@ return function (ContainerConfigurator $container): void {
     $container->services()
         ->set(InitCommand::class)
         ->args([param("kernel.project_dir")])
-        ->tag('console.command');
+        ->tag('make.command');
 
     $container->services()
         ->set(ScriptExtension::class)
