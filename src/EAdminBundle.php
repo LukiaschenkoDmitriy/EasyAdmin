@@ -15,11 +15,14 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 class EAdminBundle extends AbstractBundle {
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
+        $projectDir = $container->getParameter("kernel.project_dir");
+        $workDirectory = !file_exists($projectDir . "/src/EAdmin") ? __DIR__ : "%kernel.project_dir%/src/EAdmin";
+
         if ($container->hasExtension("framework")) {
             $container->prependExtensionConfig("framework", [
                 "asset_mapper" => [
                     "paths" => [
-                        "%kernel.project_dir%/src/EAdmin" => "eadmin",
+                        $workDirectory => "eadmin",
                     ]
                 ]
             ]);
@@ -28,7 +31,7 @@ class EAdminBundle extends AbstractBundle {
         if ($container->hasExtension("twig")) {
             $container->prependExtensionConfig('twig', [
                 'paths' => [
-                    '%kernel.project_dir%/src/EAdmin' => 'EAdmin',
+                    $workDirectory => 'EAdmin',
                 ],
             ]);
         }
