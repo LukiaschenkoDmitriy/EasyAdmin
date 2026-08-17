@@ -6,13 +6,13 @@ use EAdmin\Core\Assets\AssetMapperResolver;
 use EAdmin\Core\Assets\AssetResolverInterface;
 use EAdmin\Core\Assets\ViteAssetResolver;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
-use Override;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 
 class EAdminBundle extends AbstractBundle {
+    protected string $extensionAlias = 'eadmin';
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $projectDir = $container->getParameter("kernel.project_dir");
