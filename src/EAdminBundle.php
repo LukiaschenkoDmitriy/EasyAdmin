@@ -2,19 +2,15 @@
 
 namespace EAdmin\Core;
 
-use EAdmin\Core\DependencyInjection\EAdminExtension;
+use EAdmin\Core\Assets\AssetMapperResolver;
+use EAdmin\Core\Assets\AssetResolverInterface;
+use EAdmin\Core\Assets\ViteAssetResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 
 class EAdminBundle extends AbstractBundle {
-    public function getContainerExtension(): ?ExtensionInterface
-    {
-        return new EAdminExtension();
-    }
-
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         if ($container->hasExtension("framework")) {
@@ -39,5 +35,13 @@ class EAdminBundle extends AbstractBundle {
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $configurator->import(__DIR__ . "/../config/services.php");
+
+        $container->setParameter("eadmin.assets.driver", $config["assets"]["driver"]);
+        $container->setParameter("eadmin.assets.vite", $config["assets"]["vite"]);
+
+        $container->setAlias(
+            AssetResolverInterface::class,
+            $config["assets"]["driver"] === "vite" ? ViteAssetResolver::class : AssetMapperResolver::class
+        );
     }
 }
