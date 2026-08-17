@@ -141,7 +141,7 @@ class InitCommand extends AbstractMaker
             return;
         }
 
-        $stubPath = $stubsDir . '/vite.config.tpl.php';
+        $stubPath = $stubsDir . '/vite.config.ts.tpl.php';
         if (!$fs->exists($stubPath)) {
             $io->error(sprintf('Stub not found: %s', $stubPath));
             return;
