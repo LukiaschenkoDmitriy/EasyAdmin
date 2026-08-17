@@ -4,13 +4,13 @@ namespace EAdmin\Core\Twig\Extensions;
 
 use EAdmin\Core\Component\ComponentHelper;
 use EAdmin\Core\Component\ComponentInterface;
-use Symfony\Component\AssetMapper\AssetMapperInterface;
+use EAdmin\Core\Vite\ViteManifest;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class ScriptExtension extends AbstractExtension {
-    private array $manifestCache = [];
-    public function __construct(private AssetMapperInterface $assetMapper, private string $projectDir) {}
+class ScriptExtension extends AbstractExtension
+{
+    public function __construct(private readonly ViteManifest $manifest) {}
 
     public function getFunctions(): array
     {
@@ -21,58 +21,36 @@ class ScriptExtension extends AbstractExtension {
 
     public function index(array $context): string
     {
-        /**
-         * @var ComponentInterface $component
-         */
-        $component = $context["_self"];
-        
+        /** @var ComponentInterface $component */
+        $component = $context['_self'];
+
         $templates = array_values(array_unique(ComponentHelper::getRecursiveTemplates($component)));
         $scripts = array_values(array_unique(ComponentHelper::getRecursiveScripts($component)));
 
-        $output = "";
+        $output = '';
 
-        foreach($templates as $template) {
-            $output .= $this->map($template);
+        foreach ($templates as $template) {
+            $output .= $this->render($template);
         }
 
-        foreach ($scripts as $value) {
-            $output .= $this->map($value);
+        foreach ($scripts as $script) {
+            $output .= $this->render($script);
         }
 
         return $output;
     }
 
-    private function map(string $path): string {
-        $path = str_replace('@EAdmin/', '', $path);
-        
-        $jsFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.js', $path);
-        $jsAsset = $this->assetMapper->getAsset($jsFormat);
-
-        $scripts = "";
-
-        if ($jsAsset) {
-            $scripts .= sprintf('<script src="%s"/>', $jsAsset->publicPath);
-        }
-
-        $entryKey = "src/EAdmin/" . preg_replace('/\.html\.twig$/', '.ts', $path);
-        $tsManifest = $this->getManifest();
-
-        if (array_key_exists($entryKey, $tsManifest)) {
-            $scripts .= sprintf('<script type="module" src="/build/%s"></script>', $tsManifest[$entryKey]['file']);
-        }
-
-        return $scripts;
-    }
-
-    private function getManifest(): array
+    private function render(string $path): string
     {
-        if (empty($this->manifestCache)) {
-            $manifestPath = $this->projectDir.'/public/build/.vite/manifest.json';
-            $this->manifestCache = file_exists($manifestPath)
-                ? json_decode(file_get_contents($manifestPath), true)
-                : [];
+        $path = str_replace('@EAdmin/', '', $path);
+        $entryKey = 'src/EAdmin/' . preg_replace('/\.html\.twig$/', '.ts', $path);
+
+        $entry = $this->manifest->entry($entryKey);
+
+        if ($entry === null) {
+            return '';
         }
 
-        return $this->manifestCache;
+        return sprintf('<script type="module" src="%s"></script>', $entry->file);
     }
 }

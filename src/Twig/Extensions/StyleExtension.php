@@ -4,12 +4,13 @@ namespace EAdmin\Core\Twig\Extensions;
 
 use EAdmin\Core\Component\ComponentHelper;
 use EAdmin\Core\Component\ComponentInterface;
-use Symfony\Component\AssetMapper\AssetMapperInterface;
+use EAdmin\Core\Vite\ViteManifest;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class StyleExtension extends AbstractExtension {
-    public function __construct(private AssetMapperInterface $assetMapper) {}
+class StyleExtension extends AbstractExtension
+{
+    public function __construct(private readonly ViteManifest $manifest) {}
 
     public function getFunctions(): array
     {
@@ -20,47 +21,42 @@ class StyleExtension extends AbstractExtension {
 
     public function index(array $context): string
     {
-        /**
-         * @var ComponentInterface $component
-         */
-        $component = $context["_self"];
+        /** @var ComponentInterface $component */
+        $component = $context['_self'];
 
         $templates = array_values(array_unique(ComponentHelper::getRecursiveTemplates($component)));
         $styles = array_values(array_unique(ComponentHelper::getRecursiveStyles($component)));
 
-        $output = "";
+        $output = '';
 
-        foreach($templates as $template) {
-            $output .= $this->map($template);
+        foreach ($templates as $template) {
+            $output .= $this->render($template);
         }
 
-        foreach ($styles as $value) {
-            $output .= $this->map($value);
+        foreach ($styles as $style) {
+            $output .= $this->render($style);
         }
 
         return $output;
     }
 
-    private function map(string $path): string
+    private function render(string $path): string
     {
         $path = str_replace('@EAdmin/', '', $path);
-        
-        $cssFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.css', $path);
-        $scssFormat = "eadmin/" . preg_replace('/\.html\.twig$/', '.scss', $path);
+        $basePath = preg_replace('/\.html\.twig$/', '', $path);
 
-        $cssAsset = $this->assetMapper->getAsset($cssFormat);
-        $scssAsset = $this->assetMapper->getAsset($scssFormat);
+        $links = '';
 
-        $styles = "";
-
-        if ($cssAsset) {
-            $styles .= sprintf('<link rel="stylesheet" href="%s">', $cssAsset->publicPath);
+        $tsEntry = $this->manifest->entry('src/EAdmin/' . $basePath . '.ts');
+        foreach ($tsEntry?->css ?? [] as $cssFile) {
+            $links .= sprintf('<link rel="stylesheet" href="%s">', $cssFile);
         }
 
-        if ($scssAsset) {
-            $styles .= sprintf('<link rel="stylesheet" href="%s">', $scssAsset->publicPath);
+        $scssEntry = $this->manifest->entry('src/EAdmin/' . $basePath . '.scss');
+        if ($scssEntry !== null) {
+            $links .= sprintf('<link rel="stylesheet" href="%s">', $scssEntry->file);
         }
 
-        return $styles;
+        return $links;
     }
 }
