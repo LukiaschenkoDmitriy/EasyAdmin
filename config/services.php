@@ -21,7 +21,7 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(AssetMapperResolver::class);
     $services->set(ViteAssetResolver::class)->arg('$viteConfig', param("eadmin.assets.vite"));
-    $services->set(ViteManifest::class)->arg('$manifestPath', param("eadmin.assets.vite"));
+    $services->set(ViteManifest::class)->arg('$viteConfig', param("eadmin.assets.vite"));
 
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
 
