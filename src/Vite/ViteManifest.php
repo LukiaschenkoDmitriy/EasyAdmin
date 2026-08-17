@@ -5,9 +5,9 @@ namespace EAdmin\Core\Vite;
 final class ViteManifest {
     private array $data;
 
-    public function __construct(private readonly string $manifestPath)
+    public function __construct(private readonly array $viteConfig)
     {
-        $this->data = is_file($manifestPath) ? json_decode(file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR) : [];
+        $this->data = is_file($viteConfig["manifest_path"]) ? json_decode(file_get_contents($viteConfig["manifest_path"]), true, flags: JSON_THROW_ON_ERROR) : [];
     }
 
     public function entry(string $key): ?ViteManifestEntry
