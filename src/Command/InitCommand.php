@@ -15,6 +15,11 @@ use Symfony\Component\Yaml\Yaml;
 
 class InitCommand extends AbstractMaker
 {
+    private const DRIVER_CHOICES = [
+        'vite' => 'Vite (TS/SCSS/Tailwind, requires a build step)',
+        'asset_mapper' => 'Symfony AssetMapper (no build step)',
+    ];
+
     public function __construct(private readonly string $kernelDir) {}
 
     public static function getCommandName(): string
@@ -41,15 +46,8 @@ class InitCommand extends AbstractMaker
             $io->success(sprintf('Work directory "%s" created.', $targetDir));
         }
 
-        $driver = $io->choice('Which asset pipeline do you want to use?', [
-            'vite' => 'Vite (TS/SCSS/Tailwind, requires a build step)',
-            'asset_mapper' => 'Symfony AssetMapper (no build step)',
-        ], 'vite');
-
-        $driverKey = array_search($driver, [
-            'vite' => 'Vite (TS/SCSS/Tailwind, requires a build step)',
-            'asset_mapper' => 'Symfony AssetMapper (no build step)',
-        ], true) ?: $driver;
+        $driver = $io->choice('Which asset pipeline do you want to use?', self::DRIVER_CHOICES, 'vite');
+        $driverKey = array_search($driver, self::DRIVER_CHOICES, true) ?: $driver;
 
         $config = [
             'assets' => [
@@ -58,7 +56,7 @@ class InitCommand extends AbstractMaker
         ];
 
         if ($driverKey === 'vite') {
-            $config['assets']['vite'] = $this->setupVite($io, $fs);
+            $config['assets']['vite'] = $this->setupVite($io, $fs, $generator);
         }
 
         $this->writeConfig($io, $fs, $config);
@@ -66,49 +64,51 @@ class InitCommand extends AbstractMaker
         $io->success('EAdmin has been installed. Please review config/packages/eadmin.yaml.');
     }
 
-    private function setupVite(ConsoleStyle $io, Filesystem $fs): array
+    private function setupVite(ConsoleStyle $io, Filesystem $fs, Generator $generator): array
     {
         $typescript = $io->confirm('Enable TypeScript?', true);
         $scss       = $io->confirm('Enable SCSS?', true);
         $tailwind   = $io->confirm('Enable Tailwind CSS?', false);
 
-        $bundleDir  = dirname(__DIR__); // Core/
-        $projectDir = $this->kernelDir;
-        $stubsDir   = $bundleDir . '/Resources/stubs/vite';
+        $bundleDir = dirname(__DIR__); // Core/
+        $stubsDir  = $bundleDir . '/Resources/stubs/vite';
 
-        $this->copyStub(
-            $io,
-            $fs,
-            $stubsDir . '/package.json.tpl.php',
-            $projectDir . '/package.json'
-        );
+        $this->generateStub($io, $fs, $generator, $stubsDir . '/package.json.tpl.php', 'package.json');
 
         if ($typescript) {
-            $this->copyStub(
-                $io,
-                $fs,
-                $stubsDir . '/tsconfig.json.tpl.php',
-                $projectDir . '/tsconfig.json'
-            );
+            $this->generateStub($io, $fs, $generator, $stubsDir . '/tsconfig.json.tpl.php', 'tsconfig.json');
         }
 
-        $this->generateViteConfig($io, $fs, $stubsDir, $projectDir, $typescript, $scss, $tailwind);
+        $this->generateStub($io, $fs, $generator, $stubsDir . '/vite.config.ts.tpl.php', 'vite.config.ts');
+
+        if ($tailwind) {
+            $this->generateStub($io, $fs, $generator, $stubsDir . '/postcss.config.cjs.tpl.php', 'postcss.config.cjs');
+        }
+
+        // Flush queued files to disk now — mergeNpmDeps() below needs to
+        // read package.json back from the filesystem.
+        $generator->writeChanges();
 
         $deps = [];
-        if ($tailwind) {
-            $deps['tailwindcss']      = '^4.0.0';
-            $deps['@tailwindcss/vite'] = '^4.0.0';
-        }
         if ($scss) {
             $deps['sass-embedded'] = '^1.80.0';
         }
+        if ($tailwind) {
+            $deps['tailwindcss']          = '^4.0.0';
+            $deps['@tailwindcss/postcss'] = '^4.0.0';
+            $deps['postcss']              = '^8.4.0';
+        }
 
         if ($deps) {
-            $this->mergeNpmDeps($projectDir, $deps, $io);
+            $this->mergeNpmDeps($this->kernelDir, $deps, $io);
+        }
+
+        if ($tailwind) {
+            $io->note('Tailwind is wired through PostCSS, so it now also processes your .scss entries — add `@import "tailwindcss";` to your main stylesheet.');
         }
 
         if ($io->confirm('Install npm dependencies now?', true)) {
-            $this->runNpmInstall($projectDir, $io);
+            $this->runNpmInstall($this->kernelDir, $io);
         }
 
         return [
@@ -121,66 +121,38 @@ class InitCommand extends AbstractMaker
     }
 
     /**
-     * Generates vite.config.ts from the stub template.
-     * The template already contains the full logic; we only inject
-     * optional Tailwind plugin import/registration when needed.
+     * Queues a stub for generation via the maker Generator, preserving the
+     * same "already exists → ask to overwrite" behavior the old
+     * Filesystem::copy()-based copyStub() had.
+     *
+     * $relativeTargetPath is relative to $this->kernelDir (i.e. the project root).
      */
-    private function generateViteConfig(
+    private function generateStub(
         ConsoleStyle $io,
         Filesystem $fs,
-        string $stubsDir,
-        string $projectDir,
-        bool $typescript,
-        bool $scss,
-        bool $tailwind
+        Generator $generator,
+        string $stubPath,
+        string $relativeTargetPath,
+        array $variables = []
     ): void {
-        $targetPath = $projectDir . '/vite.config.ts';
-
-        if ($fs->exists($targetPath) && !$io->confirm('File "vite.config.ts" already exists. Overwrite?', false)) {
-            $io->note('Skipped "vite.config.ts".');
-            return;
-        }
-
-        $stubPath = $stubsDir . '/vite.config.ts.tpl.php';
         if (!$fs->exists($stubPath)) {
             $io->error(sprintf('Stub not found: %s', $stubPath));
             return;
         }
 
-        // Load the stub as a plain string (it is a .tpl.php but contains pure JS)
-        $content = file_get_contents($stubPath);
+        $absoluteTargetPath = $this->kernelDir . '/' . $relativeTargetPath;
 
-        if ($tailwind) {
-            // Inject Tailwind import and plugin
-            $content = str_replace(
-                "import { defineConfig } from 'vite';\n",
-                "import { defineConfig } from 'vite';\nimport tailwindcss from '@tailwindcss/vite';\n",
-                $content
-            );
-
-            $content = str_replace(
-                "export default defineConfig({\n",
-                "export default defineConfig({\n    plugins: [tailwindcss()],\n",
-                $content
-            );
-        }
-
-        // Optional: strip TypeScript / SCSS entry generation if the user disabled them.
-        // For simplicity the stub always generates both; we can refine later if needed.
-
-        $fs->dumpFile($targetPath, $content);
-        $io->success('Generated "vite.config.ts".');
-    }
-
-    private function copyStub(ConsoleStyle $io, Filesystem $fs, string $sourcePath, string $targetPath): void
-    {
-        if ($fs->exists($targetPath) && !$io->confirm(sprintf('File "%s" already exists. Overwrite?', basename($targetPath)), false)) {
-            $io->note(sprintf('Skipped "%s".', basename($targetPath)));
+        if ($fs->exists($absoluteTargetPath)
+            && !$io->confirm(sprintf('File "%s" already exists. Overwrite?', $relativeTargetPath), false)
+        ) {
+            $io->note(sprintf('Skipped "%s".', $relativeTargetPath));
             return;
         }
 
-        $fs->copy($sourcePath, $targetPath, true);
-        $io->success(sprintf('Copied "%s" → "%s"', basename($sourcePath), basename($targetPath)));
+        // Absolute stub path -> Generator treats it as a direct template
+        // file rather than resolving it against a bundle skeleton dir.
+        $generator->generateFile($relativeTargetPath, $stubPath, $variables);
+        $io->success(sprintf('Generated "%s".', $relativeTargetPath));
     }
 
     private function mergeNpmDeps(string $projectDir, array $deps, ConsoleStyle $io): void
