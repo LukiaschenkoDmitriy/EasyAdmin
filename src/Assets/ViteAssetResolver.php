@@ -14,6 +14,8 @@ final class ViteAssetResolver implements AssetResolverInterface
     public function resolve(string $templatePath): ResolvedAssets
     {
         $base = preg_replace('/\.html\.twig$/', '', $templatePath);
+        $base = preg_replace('/\.ts$/', '', $base);
+        $base = preg_replace('/\.js$/', '', $base);
 
         $scripts = [];
         $styles = [];
