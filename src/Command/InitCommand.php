@@ -76,6 +76,7 @@ class InitCommand extends AbstractMaker
         $this->generateStub($io, $fs, $generator, $stubsDir . '/package.json.tpl.php', 'package.json');
 
         if ($typescript) {
+            $this->generateStub($io, $fs, $generator, $stubsDir . '/global.d.ts.tpl.php', 'src/EAdmin/global.d.ts');
             $this->generateStub($io, $fs, $generator, $stubsDir . '/tsconfig.json.tpl.php', 'tsconfig.json');
         }
 
