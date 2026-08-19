@@ -63,8 +63,8 @@ trait ComponentTrait {
         return $this;
     }
 
-    public function init(): self
+    public function init(): void
     {
-        return $this;
+        return;
     }
 }

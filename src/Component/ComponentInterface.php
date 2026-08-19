@@ -12,5 +12,5 @@ interface ComponentInterface {
     /** @return array<ComponentInterface> */
     public function slots(): array|ComponentInterface;
     public function setSlots(array|ComponentInterface $slots): self;
-    public function init(): self;
+    public function init(): void;
 }
