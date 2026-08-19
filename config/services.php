@@ -6,6 +6,7 @@ use EAdmin\Core\Assets\ViteAssetResolver;
 use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
+use EAdmin\Core\Twig\Extensions\AttributeExtension;
 use EAdmin\Core\Twig\Extensions\ScriptExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
 use EAdmin\Core\Twig\Extensions\StyleExtension;
@@ -28,6 +29,7 @@ return function (ContainerConfigurator $container): void {
     $services->set(ScriptExtension::class)->tag("twig.extension");
     $services->set(StyleExtension::class)->tag("twig.extension");
     $services->set(SlotExtension::class)->tag("twig.extension");
+    $services->set(AttributeExtension::class)->tag("twig.extension");
 
     $services->set(ComponentRenderer::class);
 };
