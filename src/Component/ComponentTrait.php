@@ -62,4 +62,9 @@ trait ComponentTrait {
         $this->slots = $slots;
         return $this;
     }
+
+    public function init(): self
+    {
+        return $this;
+    }
 }
