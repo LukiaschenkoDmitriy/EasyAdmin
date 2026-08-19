@@ -22,7 +22,7 @@ class ScriptExtension extends AbstractExtension
     public function index(array $context): string
     {
         /** @var ComponentInterface $component */
-        $component = $context['component'];
+        $component = $context['c'];
 
         $paths = [
             ...ComponentHelper::getRecursiveTemplates($component),
