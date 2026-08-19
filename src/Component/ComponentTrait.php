@@ -25,6 +25,12 @@ trait ComponentTrait {
 
     public array $data = [];
     public array $aria = [];
+
+    public function __construct()
+    {
+        $this->init();
+    }
+
     /**
      * @var array<ComponentInterface>|ComponentInterface
      */

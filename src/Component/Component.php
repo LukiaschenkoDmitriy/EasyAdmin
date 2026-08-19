@@ -5,11 +5,6 @@ namespace EAdmin\Core\Component;
 class Component implements ComponentInterface {
     use ComponentTrait;
 
-    public function __construct()
-    {
-        $this->init();
-    }
-
     public static string $CUSTOM_COMPONENT_TAG = "custom_component";
 
     public static function createComponent(string $dryHTML): ComponentInterface
