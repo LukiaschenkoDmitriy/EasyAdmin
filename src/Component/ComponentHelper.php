@@ -32,16 +32,22 @@ final class ComponentHelper {
 
     public static function getRecursiveTemplates(ComponentInterface $component): array
     {
-        return array_merge([$component->template()], ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveTemplates($slot), $component->slots()));
+        $slots = is_array($component->slots()) ? $component->slots() : [$component->slots()];
+
+        return array_merge([$component->template()], ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveTemplates($slot), $slots));
     }
 
     public static function getRecursiveStyles(ComponentInterface $component): array
     {
-        return array_merge($component->styles(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveStyles($slot), $component->slots()));;
+        $slots = is_array($component->slots()) ? $component->slots() : [$component->slots()];
+
+        return array_merge($component->styles(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveStyles($slot), $slots));;
     }
 
     public static function getRecursiveScripts(ComponentInterface $component): array
     {
-        return array_merge($component->scripts(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveScripts($slot), $component->slots()));;
+        $slots = is_array($component->slots()) ? $component->slots() : [$component->slots()];
+
+        return array_merge($component->scripts(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveScripts($slot), $slots));;
     }
 }
