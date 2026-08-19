@@ -11,11 +11,6 @@ class ComponentRenderer {
 
     public function render(array|ComponentInterface $slots): string
     {
-        if (!is_array($slots) && $slots->template() == Component::$CUSTOM_COMPONENT_TAG) {
-            return $slots->props()["html"];
-        }
-
-
         if (is_array($slots)) {
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s), $slots));
         }
@@ -25,6 +20,10 @@ class ComponentRenderer {
 
     private function renderComponent(ComponentInterface $component): string
     {
+        if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
+            return $component->props()["html"];
+        }
+
         return $this->twig->render($component->template(), [
             "_self" => $component, 
             "props" => $component->props(), 
