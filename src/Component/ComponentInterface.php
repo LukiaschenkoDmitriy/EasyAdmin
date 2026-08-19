@@ -2,8 +2,6 @@
 
 namespace EAdmin\Core\Component;
 
-use EAdmin\Core\Props\PropsInterface;
-
 interface ComponentInterface {
     public function template(): string;
     public function alias(): ?string;
@@ -14,8 +12,4 @@ interface ComponentInterface {
     /** @return array<ComponentInterface> */
     public function slots(): array|ComponentInterface;
     public function setSlots(array|ComponentInterface $slots): self;
-    public function props(): PropsInterface|array|null;
-    public function setProps(PropsInterface|array|null $props): self;
-    public function baseProps(): PropsInterface;
-    public function setBaseProps(PropsInterface $props): self;
 }

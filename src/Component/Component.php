@@ -10,10 +10,7 @@ class Component implements ComponentInterface {
     public static function createComponent(string $dryHTML): ComponentInterface
     {
         return new class($dryHTML) extends Component {
-            public function __construct(string $html)
-            {
-                $this->setProps(["html" => $html]);
-            }
+            public function __construct(public string $html) {}
 
             public function template(): string
             {

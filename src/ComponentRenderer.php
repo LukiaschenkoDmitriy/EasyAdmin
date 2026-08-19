@@ -21,14 +21,12 @@ class ComponentRenderer {
     private function renderComponent(ComponentInterface $component): string
     {
         if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
-            return $component->props()["html"];
+            return $component->html;
         }
 
         return $this->twig->render($component->template(), [
-            "_self" => $component, 
-            "props" => $component->props(), 
+            "c" => $component, 
             "slots" => $component->slots(),
-            "baseProps" => $component->baseProps()
         ]);
     }
 }

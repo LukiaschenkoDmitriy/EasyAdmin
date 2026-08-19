@@ -2,12 +2,29 @@
 
 namespace EAdmin\Core\Component;
 
-use EAdmin\Core\Props\BaseProps;
-use EAdmin\Core\Props\PropsInterface;
-
 trait ComponentTrait {
-    public PropsInterface|array|null $props = null;
-    public ?PropsInterface $baseProps = null;
+    public ?string $id = null;
+    public ?string $class = null;
+    public ?string $style = null;
+
+    public ?string $title = null;
+    public ?int $tabindex = null;
+    public ?string $lang = null;
+    public ?string $dir = null;
+    public ?string $role = null;
+
+    public ?bool $hidden = null;
+    public ?bool $draggable = null;
+    public ?bool $contenteditable = null;
+    public ?bool $spellcheck = null;
+
+    public ?string $ariaLabel = null;
+    public ?string $ariaLabelledby = null;
+    public ?string $ariaDescribedby = null;
+    public ?string $ariaHidden = null;
+
+    public array $data = [];
+    public array $aria = [];
     /**
      * @var array<ComponentInterface>|ComponentInterface
      */
@@ -20,17 +37,6 @@ trait ComponentTrait {
     public function template(): string
     {
         return ComponentHelper::getTemplate(static::class);
-    }
-
-    public function props(): PropsInterface|array|null
-    {
-        return $this->props;
-    }
-
-    public function setProps(PropsInterface|array|null $props): self
-    {
-        $this->props = $props;
-        return $this;
     }
 
     /** @return array<string> */
@@ -54,21 +60,6 @@ trait ComponentTrait {
     public function setSlots(array|ComponentInterface $slots): self
     {
         $this->slots = $slots;
-        return $this;
-    }
-
-    public function baseProps(): PropsInterface
-    {
-        if ($this->baseProps == null) {
-            $this->baseProps = new BaseProps();
-        }
-
-        return $this->baseProps;
-    }
-
-    public function setBaseProps(PropsInterface $props): self
-    {
-        $this->baseProps = $props;
         return $this;
     }
 }

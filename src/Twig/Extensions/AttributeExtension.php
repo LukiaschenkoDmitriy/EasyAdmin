@@ -2,7 +2,6 @@
 
 namespace EAdmin\Core\Twig\Extensions;
 
-use EAdmin\Core\Props\BaseProps;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -17,22 +16,19 @@ class AttributeExtension extends AbstractExtension
 
     public function index(array $context): string
     {
-        /**
-         * @var BaseProps $props
-         */
-        $props = $context["baseProps"];
+        $component = $context["c"];
 
         $attrs = [];
 
         $simple = [
-            "id"        => $props->id,
-            "class"     => $props->class,
-            "style"     => $props->style,
-            "title"     => $props->title,
-            "tabindex"  => $props->tabindex,
-            "lang"      => $props->lang,
-            "dir"       => $props->dir,
-            "role"      => $props->role,
+            "id"        => $component->id,
+            "class"     => $component->class,
+            "style"     => $component->style,
+            "title"     => $component->title,
+            "tabindex"  => $component->tabindex,
+            "lang"      => $component->lang,
+            "dir"       => $component->dir,
+            "role"      => $component->role,
         ];
 
         foreach ($simple as $name => $value) {
@@ -42,10 +38,10 @@ class AttributeExtension extends AbstractExtension
         }
 
         $booleans = [
-            "hidden"          => $props->hidden,
-            "draggable"       => $props->draggable,
-            "contenteditable" => $props->contenteditable,
-            "spellcheck"      => $props->spellcheck,
+            "hidden"          => $component->hidden,
+            "draggable"       => $component->draggable,
+            "contenteditable" => $component->contenteditable,
+            "spellcheck"      => $component->spellcheck,
         ];
 
         foreach ($booleans as $name => $value) {
@@ -55,10 +51,10 @@ class AttributeExtension extends AbstractExtension
         }
 
         $aria = [
-            "aria-label"       => $props->ariaLabel,
-            "aria-labelledby"  => $props->ariaLabelledby,
-            "aria-describedby" => $props->ariaDescribedby,
-            "aria-hidden"      => $props->ariaHidden,
+            "aria-label"       => $component->ariaLabel,
+            "aria-labelledby"  => $component->ariaLabelledby,
+            "aria-describedby" => $component->ariaDescribedby,
+            "aria-hidden"      => $component->ariaHidden,
         ];
 
         foreach ($aria as $name => $value) {
@@ -67,13 +63,13 @@ class AttributeExtension extends AbstractExtension
             }
         }
 
-        foreach ($props->data as $key => $value) {
+        foreach ($component->data as $key => $value) {
             if ($value !== null) {
                 $attrs[] = $this->renderAttr("data-{$key}", (string) $value);
             }
         }
 
-        foreach ($props->aria as $key => $value) {
+        foreach ($component->aria as $key => $value) {
             if ($value !== null) {
                 $attrs[] = $this->renderAttr("aria-{$key}", (string) $value);
             }
