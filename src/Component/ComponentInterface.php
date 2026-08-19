@@ -12,8 +12,8 @@ interface ComponentInterface {
     /** @return array<string> */
     public function scripts(): array;
     /** @return array<ComponentInterface> */
-    public function slots(): array;
-    public function setSlots(array $slots): self;
+    public function slots(): array|ComponentInterface;
+    public function setSlots(array|ComponentInterface $slots): self;
     public function props(): PropsInterface|array|null;
     public function setProps(PropsInterface|array|null $props): self;
     public function baseProps(): PropsInterface;

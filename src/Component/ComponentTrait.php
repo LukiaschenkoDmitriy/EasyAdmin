@@ -9,9 +9,9 @@ trait ComponentTrait {
     public ?PropsInterface $props = null;
     public ?PropsInterface $baseProps = null;
     /**
-     * @var array<ComponentInterface>
+     * @var array<ComponentInterface>|ComponentInterface
      */
-    private array $slots = [];
+    private array|ComponentInterface $slots = [];
     public function alias(): ?string
     {
         return null;
@@ -45,13 +45,13 @@ trait ComponentTrait {
         return [];
     }
 
-    /** @return array<Component> */
-    public function slots(): array
+    /** @return array<ComponentInterface>|ComponentInterface */
+    public function slots(): array|ComponentInterface
     {
         return $this->slots;
     }
 
-    public function setSlots(array $slots): self
+    public function setSlots(array|ComponentInterface $slots): self
     {
         $this->slots = $slots;
         return $this;
