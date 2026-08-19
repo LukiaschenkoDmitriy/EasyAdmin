@@ -16,4 +16,6 @@ interface ComponentInterface {
     public function setSlots(array $slots): self;
     public function props(): PropsInterface|array|null;
     public function setProps(PropsInterface|array|null $props): self;
+    public function baseProps(): PropsInterface;
+    public function setBaseProps(PropsInterface $props): self;
 }

@@ -2,10 +2,12 @@
 
 namespace EAdmin\Core\Component;
 
+use EAdmin\Core\Props\BaseProps;
 use EAdmin\Core\Props\PropsInterface;
 
 trait ComponentTrait {
     public ?PropsInterface $props = null;
+    public ?PropsInterface $baseProps = null;
     /**
      * @var array<ComponentInterface>
      */
@@ -52,6 +54,21 @@ trait ComponentTrait {
     public function setSlots(array $slots): self
     {
         $this->slots = $slots;
+        return $this;
+    }
+
+    public function baseProps(): PropsInterface
+    {
+        if ($this->baseProps == null) {
+            $this->baseProps = new BaseProps();
+        }
+
+        return $this->baseProps;
+    }
+
+    public function setBaseProps(PropsInterface $props): self
+    {
+        $this->baseProps = $props;
         return $this;
     }
 }
