@@ -6,7 +6,7 @@ use EAdmin\Core\Props\BaseProps;
 use EAdmin\Core\Props\PropsInterface;
 
 trait ComponentTrait {
-    public ?PropsInterface $props = null;
+    public PropsInterface|array|null $props = null;
     public ?PropsInterface $baseProps = null;
     /**
      * @var array<ComponentInterface>|ComponentInterface
