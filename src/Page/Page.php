@@ -13,6 +13,7 @@ abstract class Page extends PageController implements PageInterface {
     public function __construct(protected ComponentRenderer $renderer)
     {
         parent::__construct($renderer);
+        $this->init();
     }
 
     public function __invoke(): Response
