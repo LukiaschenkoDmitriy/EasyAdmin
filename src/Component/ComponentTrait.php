@@ -73,4 +73,9 @@ trait ComponentTrait {
     {
         return;
     }
+
+    public function beforeRender(array $context): void
+    {
+        return;
+    }
 }

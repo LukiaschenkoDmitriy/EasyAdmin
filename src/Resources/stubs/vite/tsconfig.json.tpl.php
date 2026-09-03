@@ -12,6 +12,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "ignoreDeprecations": "6.0",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "baseUrl": ".",
     "paths": {
       "@EAdmin/*": ["src/EAdmin/*"],

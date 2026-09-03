@@ -12,9 +12,14 @@ class ComponentRenderer {
     public function render(array|ComponentInterface $slots, array $context = []): string
     {
         if (is_array($slots)) {
+            foreach ($slots as $slot) {
+                $slot->beforeRender($context);
+            }
+
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context), $slots));
         }
 
+        $slots->beforeRender($context);
         return $this->renderComponent($slots, $context);
     }
 
