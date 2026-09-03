@@ -9,16 +9,16 @@ use Twig\Environment;
 class ComponentRenderer {
     public function __construct(private Environment $twig) {}
 
-    public function render(array|ComponentInterface $slots): string
+    public function render(array|ComponentInterface $slots, array $context = []): string
     {
         if (is_array($slots)) {
-            return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s), $slots));
+            return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context), $slots));
         }
 
-        return $this->renderComponent($slots);
+        return $this->renderComponent($slots, $context);
     }
 
-    private function renderComponent(ComponentInterface $component): string
+    private function renderComponent(ComponentInterface $component, array $context = []): string
     {
         if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
             return $component->html;
@@ -27,6 +27,7 @@ class ComponentRenderer {
         return $this->twig->render($component->template(), [
             "c" => $component, 
             "slots" => $component->slots(),
+            ...$context
         ]);
     }
 }

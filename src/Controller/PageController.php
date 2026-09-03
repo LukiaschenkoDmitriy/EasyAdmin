@@ -11,9 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class PageController extends AbstractController {
     public function __construct(protected ComponentRenderer $renderer) {}
 
-    public function renderComponent(ComponentInterface $component): Response
+    public function renderComponent(ComponentInterface $component, array $context = []): Response
     {
-        $view = TidyUtil::cleanAndRepairHTML($this->renderer->render($component));
-        return new Response($view, 200);
+        return new Response(TidyUtil::cleanAndRepairHTML($this->renderer->render($component, $context)), 200);
     }
 }
