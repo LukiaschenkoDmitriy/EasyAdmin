@@ -27,7 +27,7 @@ class ComponentRenderer {
         return $this->twig->render($component->template(), [
             "c" => $component, 
             "slots" => $component->slots(),
-            ...$context
+            "context" => $context
         ]);
     }
 }

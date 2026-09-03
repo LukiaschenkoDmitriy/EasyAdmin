@@ -25,7 +25,7 @@ class SlotExtension extends AbstractExtension
             return $this->renderer->render($context["slots"], array_key_exists("context", $context) ? $context["context"] : []);
         }
 
-        return $this->renderer->render($slot);
+        return $this->renderer->render($slot, array_key_exists("context", $context) ? $context["context"] : []);
     }
 
     public function render(array $context, string|int $slot, int $position = 0): string
