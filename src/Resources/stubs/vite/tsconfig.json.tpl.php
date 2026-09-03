@@ -14,7 +14,8 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@EAdmin/*": ["src/EAdmin/*"]
+      "@EAdmin/*": ["src/EAdmin/*"],
+      "@EAdminCore/*": ["vendor/easy-admin/core/src/TS/*"]
     }
   },
   "include": ["src/EAdmin"]
