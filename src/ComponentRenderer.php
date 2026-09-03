@@ -13,13 +13,18 @@ class ComponentRenderer {
     {
         if (is_array($slots)) {
             foreach ($slots as $slot) {
-                $slot->beforeRender($context);
+                $updatedContext = $slot->beforeRender($context);
+
+                if ($updatedContext) $context = $updatedContext;
             }
 
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context), $slots));
         }
 
-        $slots->beforeRender($context);
+        $updatedContext = $slots->beforeRender($context);
+
+        if ($updatedContext) $context = $updatedContext;
+
         return $this->renderComponent($slots, $context);
     }
 

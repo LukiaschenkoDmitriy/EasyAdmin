@@ -74,8 +74,8 @@ trait ComponentTrait {
         return;
     }
 
-    public function beforeRender(array $context): void
+    public function beforeRender(array $context): array|null
     {
-        return;
+        return null;
     }
 }
