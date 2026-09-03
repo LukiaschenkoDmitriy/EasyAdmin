@@ -22,7 +22,7 @@ class SlotExtension extends AbstractExtension
     public function dryRender(array $context, ComponentInterface|array|null $slot = null): string
     {
         if ($slot == null) {
-            return $this->renderer->render($context["slots"]);
+            return $this->renderer->render($context["slots"], array_key_exists("context", $context) ? $context["context"] : []);
         }
 
         return $this->renderer->render($slot);
@@ -44,6 +44,6 @@ class SlotExtension extends AbstractExtension
 
         if (!$currentSlot) return "";
 
-        return $this->renderer->render($currentSlot);
+        return $this->renderer->render($currentSlot, array_key_exists("context", $context) ? $context["context"] : []);
     }
 }
