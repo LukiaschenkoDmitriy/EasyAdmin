@@ -13,6 +13,8 @@ const entries = [...tsEntries, ...scssEntries].reduce((acc, file) => {
     return acc;
 }, {} as Record<string, string>);
 
+entries['core'] = resolve(__dirname, 'vendor/eadmin/core/TS/index.ts');
+
 export default defineConfig({
     build: {
         outDir: 'public/build',
