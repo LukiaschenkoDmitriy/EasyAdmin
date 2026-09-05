@@ -34,6 +34,8 @@ class ComponentRenderer {
 
     private function renderComponent(ComponentInterface $component, array $context = [], array $services = []): string
     {
+        $component->init();
+
         if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
             return $component->html;
         }

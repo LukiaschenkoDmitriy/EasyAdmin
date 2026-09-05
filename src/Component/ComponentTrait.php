@@ -2,8 +2,6 @@
 
 namespace EAdmin\Core\Component;
 
-use Symfony\Component\Console\Formatter\NullOutputFormatterStyle;
-
 trait ComponentTrait {
     public array $services = [];
     public ?string $id = null;
@@ -28,11 +26,6 @@ trait ComponentTrait {
 
     public array $data = [];
     public array $aria = [];
-
-    public function __construct()
-    {
-        $this->init();
-    }
 
     public function setId(?string $id): self
     {
