@@ -2,7 +2,10 @@
 
 namespace EAdmin\Core\Component;
 
+use Symfony\Component\Console\Formatter\NullOutputFormatterStyle;
+
 trait ComponentTrait {
+    public array $services = [];
     public ?string $id = null;
     public ?string $class = null;
     public ?string $style = null;
@@ -182,8 +185,27 @@ trait ComponentTrait {
         return;
     }
 
+    public function updateContext(array $context): array|null
+    {
+        return null;
+    }
+
     public function beforeRender(array $context): array|null
     {
+        $this->services = $context["services"];
+        return $this->updateContext($context);
+    }
+
+    public function getService(string $class): mixed
+    {
+        if (!$this->services) return null;
+
+        foreach ($this->services as $service) {
+            if ($service::class === $class) {
+                return $service;
+            }
+        }
+
         return null;
     }
 }

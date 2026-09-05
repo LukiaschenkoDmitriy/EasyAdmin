@@ -4,6 +4,7 @@ namespace EAdmin\Core;
 
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\Component\ComponentInterface;
+use EAdmin\Core\Page\PageInterface;
 use Twig\Environment;
 
 class ComponentRenderer {
@@ -34,10 +35,10 @@ class ComponentRenderer {
             return $component->html;
         }
 
-        return $this->twig->render($component->template(), [
+        return $this->twig->render($component->template(), array_merge([
             "c" => $component, 
             "slots" => $component->slots(),
             "context" => $context
-        ]);
+        ], $component instanceof PageInterface ? ["services" => $component->services()] : []));
     }
 }

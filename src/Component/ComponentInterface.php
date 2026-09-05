@@ -14,4 +14,6 @@ interface ComponentInterface {
     public function setSlots(array|ComponentInterface $slots): self;
     public function init(): void;
     public function beforeRender(array $context): array|null;
+    public function updateContext(array $context): array|null;
+    public function getService(string $class): mixed;
 }

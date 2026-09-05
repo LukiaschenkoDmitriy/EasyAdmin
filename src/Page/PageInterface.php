@@ -4,4 +4,6 @@ namespace EAdmin\Core\Page;
 
 use EAdmin\Core\Component\ComponentInterface;
 
-interface PageInterface extends ComponentInterface { }
+interface PageInterface extends ComponentInterface {
+    public function services(): array;
+ }

@@ -14,4 +14,9 @@ abstract class Page extends PageController implements PageInterface {
         parent::__construct($renderer);
         $this->init();
     }
+
+    public function services(): array
+    {
+        return [];
+    }
 }
