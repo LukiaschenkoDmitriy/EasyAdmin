@@ -12,9 +12,14 @@ class ComponentRenderer {
 
     public function render(array|ComponentInterface $slots, array $context = []): string
     {
+        $services = [];
+        if ($slots instanceof PageInterface) {
+            $services = $slots->services();
+        }
+
         if (is_array($slots)) {
             foreach ($slots as $slot) {
-                $updatedContext = $slot->beforeRender($context);
+                $updatedContext = $slot->beforeRender($context, $services);
 
                 if ($updatedContext) $context = $updatedContext;
             }
@@ -22,7 +27,7 @@ class ComponentRenderer {
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context), $slots));
         }
 
-        $updatedContext = $slots->beforeRender($context);
+        $updatedContext = $slots->beforeRender($context, $services);
 
         if ($updatedContext) $context = $updatedContext;
 

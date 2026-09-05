@@ -190,9 +190,9 @@ trait ComponentTrait {
         return null;
     }
 
-    public function beforeRender(array $context): array|null
+    public function beforeRender(array $context, array $services): array|null
     {
-        $this->services = $context["services"];
+        $this->services = $services;
         return $this->updateContext($context);
     }
 
