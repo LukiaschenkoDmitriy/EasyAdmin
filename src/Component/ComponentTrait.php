@@ -31,6 +31,114 @@ trait ComponentTrait {
         $this->init();
     }
 
+    public function setId(?string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function setClass(?string $class): self
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+    public function setStyle(?string $style): self
+    {
+        $this->style = $style;
+        return $this;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function setTabindex(?int $tabindex): self
+    {
+        $this->tabindex = $tabindex;
+        return $this;
+    }
+
+    public function setLang(?string $lang): self
+    {
+        $this->lang = $lang;
+        return $this;
+    }
+
+    public function setDir(?string $dir): self
+    {
+        $this->dir = $dir;
+        return $this;
+    }
+
+    public function setRole(?string $role): self
+    {
+        $this->role = $role;
+        return $this;
+    }
+
+    public function setHidden(?bool $hidden): self
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    public function setDraggable(?bool $draggable): self
+    {
+        $this->draggable = $draggable;
+        return $this;
+    }
+
+    public function setContenteditable(?bool $contenteditable): self
+    {
+        $this->contenteditable = $contenteditable;
+        return $this;
+    }
+
+    public function setSpellcheck(?bool $spellcheck): self
+    {
+        $this->spellcheck = $spellcheck;
+        return $this;
+    }
+
+    public function setAriaLabel(?string $ariaLabel): self
+    {
+        $this->ariaLabel = $ariaLabel;
+        return $this;
+    }
+
+    public function setAriaLabelledby(?string $ariaLabelledby): self
+    {
+        $this->ariaLabelledby = $ariaLabelledby;
+        return $this;
+    }
+
+    public function setAriaDescribedby(?string $ariaDescribedby): self
+    {
+        $this->ariaDescribedby = $ariaDescribedby;
+        return $this;
+    }
+
+    public function setAriaHidden(?string $ariaHidden): self
+    {
+        $this->ariaHidden = $ariaHidden;
+        return $this;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function setAria(array $aria): self
+    {
+        $this->aria = $aria;
+        return $this;
+    }
+
     /**
      * @var array<ComponentInterface>|ComponentInterface
      */
