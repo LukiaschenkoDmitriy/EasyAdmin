@@ -40,10 +40,10 @@ class ComponentRenderer {
             return $component->html;
         }
 
-        return $this->twig->render($component->template(), array_merge([
+        return $this->twig->render($component->template(), [
             "c" => $component, 
             "slots" => $component->slots(),
             "context" => $context
-        ], $component instanceof PageInterface ? ["services" => $component->services()] : []));
+        ]);
     }
 }
