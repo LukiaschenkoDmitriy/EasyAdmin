@@ -6,4 +6,5 @@ use EAdmin\Core\Component\ComponentInterface;
 
 interface PageInterface extends ComponentInterface {
     public function services(): array;
+    public function context(): array;
  }

@@ -19,4 +19,9 @@ abstract class Page extends PageController implements PageInterface {
     {
         return [];
     }
+
+    public function context(): array
+    {
+        return [];
+    }
 }

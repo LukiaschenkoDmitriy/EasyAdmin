@@ -13,6 +13,7 @@ class ComponentRenderer {
     public function render(array|ComponentInterface $slots, array $context = [], array $services = []): string
     {
         $services = $slots instanceof PageInterface ? array_merge($slots->services(), $services) : $services;
+        $context = $slots instanceof PageInterface ? array_merge($slots->context(), $context) : $context;
 
         if (is_array($slots)) {
             foreach ($slots as $slot) {
