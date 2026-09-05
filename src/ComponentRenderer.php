@@ -10,12 +10,9 @@ use Twig\Environment;
 class ComponentRenderer {
     public function __construct(private Environment $twig) {}
 
-    public function render(array|ComponentInterface $slots, array $context = []): string
+    public function render(array|ComponentInterface $slots, array $context = [], array $services = []): string
     {
-        $services = [];
-        if ($slots instanceof PageInterface) {
-            $services = $slots->services();
-        }
+        $services = $slots instanceof PageInterface ? array_merge($slots->services(), $services) : $services;
 
         if (is_array($slots)) {
             foreach ($slots as $slot) {
@@ -24,17 +21,17 @@ class ComponentRenderer {
                 if ($updatedContext) $context = $updatedContext;
             }
 
-            return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context), $slots));
+            return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context, $services), $slots));
         }
 
         $updatedContext = $slots->beforeRender($context, $services);
 
         if ($updatedContext) $context = $updatedContext;
 
-        return $this->renderComponent($slots, $context);
+        return $this->renderComponent($slots, $context, $services);
     }
 
-    private function renderComponent(ComponentInterface $component, array $context = []): string
+    private function renderComponent(ComponentInterface $component, array $context = [], array $services = []): string
     {
         if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
             return $component->html;
@@ -43,7 +40,8 @@ class ComponentRenderer {
         return $this->twig->render($component->template(), [
             "c" => $component, 
             "slots" => $component->slots(),
-            "context" => $context
+            "context" => $context,
+            "services" => $services
         ]);
     }
 }
