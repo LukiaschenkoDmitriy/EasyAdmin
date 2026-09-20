@@ -2,6 +2,7 @@
 
 namespace EAdmin\Core\Twig\Extensions;
 
+use EAdmin\Core\Component\ComponentInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -16,19 +17,22 @@ class AttributeExtension extends AbstractExtension
 
     public function index(array $context): string
     {
+        /**
+         * @var ComponentInterface $component
+         */
         $component = $context["c"];
 
         $attrs = [];
 
         $simple = [
-            "id"        => $component->id,
-            "class"     => $component->class,
-            "style"     => $component->style,
-            "title"     => $component->title,
-            "tabindex"  => $component->tabindex,
-            "lang"      => $component->lang,
-            "dir"       => $component->dir,
-            "role"      => $component->role,
+            "id"        => $component->getId(),
+            "class"     => $component->getClass(),
+            "style"     => $component->getStyle(),
+            "title"     => $component->getTitle(),
+            "tabindex"  => $component->getTabindex(),
+            "lang"      => $component->getLang(),
+            "dir"       => $component->getDir(),
+            "role"      => $component->getRole(),
         ];
 
         foreach ($simple as $name => $value) {
@@ -38,10 +42,10 @@ class AttributeExtension extends AbstractExtension
         }
 
         $booleans = [
-            "hidden"          => $component->hidden,
-            "draggable"       => $component->draggable,
-            "contenteditable" => $component->contenteditable,
-            "spellcheck"      => $component->spellcheck,
+            "hidden"          => $component->isHidden(),
+            "draggable"       => $component->isDraggable(),
+            "contenteditable" => $component->isContenteditable(),
+            "spellcheck"      => $component->isSpellcheck(),
         ];
 
         foreach ($booleans as $name => $value) {
@@ -51,10 +55,10 @@ class AttributeExtension extends AbstractExtension
         }
 
         $aria = [
-            "aria-label"       => $component->ariaLabel,
-            "aria-labelledby"  => $component->ariaLabelledby,
-            "aria-describedby" => $component->ariaDescribedby,
-            "aria-hidden"      => $component->ariaHidden,
+            "aria-label"       => $component->getAriaLabel(),
+            "aria-labelledby"  => $component->getAriaLabelledby(),
+            "aria-describedby" => $component->getAriaDescribedBy(),
+            "aria-hidden"      => $component->getAriaHidden(),
         ];
 
         foreach ($aria as $name => $value) {
@@ -63,13 +67,13 @@ class AttributeExtension extends AbstractExtension
             }
         }
 
-        foreach ($component->data as $key => $value) {
+        foreach ($component->getData() as $key => $value) {
             if ($value !== null) {
                 $attrs[] = $this->renderAttr("data-{$key}", (string) $value);
             }
         }
 
-        foreach ($component->aria as $key => $value) {
+        foreach ($component->getAria() as $key => $value) {
             if ($value !== null) {
                 $attrs[] = $this->renderAttr("aria-{$key}", (string) $value);
             }
