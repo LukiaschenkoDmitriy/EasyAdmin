@@ -5,7 +5,6 @@ namespace EAdmin\Core\Controller;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\Component\ComponentDecoratorInterface;
 use EAdmin\Core\Component\ComponentInterface;
-use Override;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Service\Attribute\Required;
 
@@ -97,13 +96,11 @@ class ComponentController extends AbstractController implements ComponentInterfa
         return $this->decorator->setDraggable($draggable);
     }
 
-    #[Override]
     public function setLang(?string $lang): ComponentInterface
     {
         return $this->decorator->setLang($lang);
     }
 
-    #[Override]
     public function setClass(?string $class): ComponentInterface
     {
         return $this->decorator->setClass($class);
