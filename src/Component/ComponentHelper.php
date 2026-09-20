@@ -2,6 +2,8 @@
 
 namespace EAdmin\Core\Component;
 
+use ReflectionClass;
+
 final class ComponentHelper {
     public static function getTemplate(string $class): string
     {
@@ -34,7 +36,7 @@ final class ComponentHelper {
     {
         $slots = is_array($component->slots()) ? $component->slots() : [$component->slots()];
 
-        return array_merge([$component->template()], ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveTemplates($slot), $slots));
+        return array_merge([$component->template()], ComponentHelper::getParentsTemplate($component), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveTemplates($slot), $slots));
     }
 
     public static function getRecursiveStyles(ComponentInterface $component): array
@@ -49,5 +51,23 @@ final class ComponentHelper {
         $slots = is_array($component->slots()) ? $component->slots() : [$component->slots()];
 
         return array_merge($component->scripts(), ...array_map(fn(ComponentInterface $slot) => ComponentHelper::getRecursiveScripts($slot), $slots));;
+    }
+
+    private static function getParentsTemplate(ComponentInterface $component, array $templates = []): array
+    {
+        $parent = (new ReflectionClass($component::class))->getParentClass();
+
+        if (!$parent || $parent->isAbstract()) {
+            return $templates;
+        }
+
+        $instance = $parent->newInstanceWithoutConstructor();
+
+        $template = null;
+        try {
+            $template = [$instance->template()];
+        } catch (\Exception $e) { }
+
+        return ComponentHelper::getParentsTemplate($instance, array_merge($templates, $template ?? []));
     }
 }

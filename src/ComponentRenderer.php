@@ -2,7 +2,7 @@
 
 namespace EAdmin\Core;
 
-use EAdmin\Core\Component\Component;
+use EAdmin\Core\Component\ComponentDecoratorInterface;
 use EAdmin\Core\Component\ComponentInterface;
 use EAdmin\Core\Page\PageInterface;
 use Twig\Environment;
@@ -36,12 +36,8 @@ class ComponentRenderer {
     {
         $component->init();
 
-        if ($component->template() == Component::$CUSTOM_COMPONENT_TAG) {
-            return $component->html;
-        }
-
         return $this->twig->render($component->template(), [
-            "c" => $component, 
+            "c" => $component instanceof ComponentDecoratorInterface ? $component->getDecorator() : $component, 
             "slots" => $component->slots(),
             "context" => $context,
             "services" => $services
