@@ -220,7 +220,9 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
 
     public function beforeRender(array $context, array $services): ?array
     {
-        return $this->decorator->beforeRender($context, $services);
+        $this->decorator->beforeRender($context, $services);
+
+        return $this->init($context) ?? $context;
     }
 
     public function getService(string $class): mixed

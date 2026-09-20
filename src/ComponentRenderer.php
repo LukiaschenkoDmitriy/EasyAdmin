@@ -14,6 +14,8 @@ class ComponentRenderer {
         $services = $slots instanceof PageInterface ? array_merge($slots->services(), $services) : $services;
         $context = $slots instanceof PageInterface ? array_merge($slots->context(), $context) : $context;
 
+        $context = $this->updateContext($slots, $context, $services);
+
         if (is_array($slots)) {
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context, $services), $slots));
         }
@@ -21,10 +23,25 @@ class ComponentRenderer {
         return $this->renderComponent($slots, $context, $services);
     }
 
+    private function updateContext(array|ComponentInterface $slots, array $context, array $services): array
+    {
+        if (is_array($slots)) {
+            /** @var ComponentInterface $component */
+            foreach ($slots as $component) {
+                $newContext = $component->beforeRender($context, $services);
+
+                if (!$newContext) continue;
+                $context = $newContext;
+            }
+
+            return $context;
+        }
+
+        return $slots->beforeRender($context, $services) ?? $context;
+    }
+
     private function renderComponent(ComponentInterface $component, array $context = [], array $services = []): string
     {
-        $context = $component->beforeRender($context, $services);
-
         return $this->twig->render($component->template(), [
             "c" => $component, 
             "slots" => $component->slots(),
