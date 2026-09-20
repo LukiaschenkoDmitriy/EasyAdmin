@@ -28,6 +28,96 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
         return [];
     }
 
+    public function setAriaDescribedby(?string $ariaDescribedby): ComponentInterface
+    {
+        return $this->decorator->setAriaDescribedby($ariaDescribedby);
+    }
+
+    public function setAriaHidden(?string $ariaHidden): ComponentInterface
+    {
+        return $this->decorator->setAriaHidden($ariaHidden);
+    }
+
+    public function setData(array $data): ComponentInterface
+    {
+        return $this->decorator->setData($data);
+    }
+
+    public function setSpellcheck(?bool $spellcheck): ComponentInterface
+    {
+        return $this->decorator->setSpellcheck($spellcheck);
+    }
+
+    public function setAriaLabel(?string $ariaLabel): ComponentInterface
+    {
+        return $this->decorator->setAriaLabel($ariaLabel);
+    }
+
+    public function setAriaLabelledby(?string $ariaLabelledby): ComponentInterface
+    {
+        return $this->decorator->setAriaLabelledby($ariaLabelledby);
+    }
+
+    public function setAria(array $aria): ComponentInterface
+    {
+        return $this->decorator->setAria($aria);
+    }
+    
+    public function setContenteditable(?bool $contentditable): ComponentInterface
+    {
+        return $this->decorator->setContenteditable($contentditable);
+    }
+
+    public function setId(?string $id): ComponentInterface
+    {
+        return $this->decorator->setId($id);
+    }
+
+    public function setStyle(?string $style): ComponentInterface
+    {
+        return $this->decorator->setStyle($style);
+    }
+
+    public function setTitle(?string $title): ComponentInterface
+    {
+        return $this->decorator->setTitle($title);
+    }
+
+    public function setTabindex(?int $tabindex): ComponentInterface
+    {
+        return $this->decorator->setTabindex($tabindex);
+    }
+
+    public function setDir(?string $dir): ComponentInterface
+    {
+        return $this->decorator->setDir($dir);
+    }
+
+    public function setRole(?string $role): ComponentInterface
+    {
+        return $this->decorator->setRole($role);
+    }
+
+    public function setHidden(?bool $hidden): ComponentInterface
+    {
+        return $this->decorator->setHidden($hidden);
+    }
+
+    public function setDraggable(?bool $draggable): ComponentInterface
+    {
+        return $this->decorator->setDraggable($draggable);
+    }
+
+    public function setLang(?string $lang): ComponentInterface
+    {
+        return $this->decorator->setLang($lang);
+    }
+
+    public function setClass(?string $class): ComponentInterface
+    {
+        return $this->decorator->setClass($class);
+    }
+
     public function alias(): ?string
     {
         return $this->decorator->alias();
