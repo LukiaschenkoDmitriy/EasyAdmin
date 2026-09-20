@@ -106,6 +106,96 @@ class ComponentController extends AbstractController implements ComponentInterfa
         return $this->decorator->setClass($class);
     }
 
+    public function getId(): ?string
+    {
+        return $this->decorator->getId();
+    }
+    
+    public function getClass(): ?string
+    {
+        return $this->decorator->getClass();
+    }
+    
+    public function getStyle(): ?string
+    {
+        return $this->decorator->getStyle();
+    }
+    
+    public function getTitle(): ?string
+    {
+        return $this->decorator->getTitle();
+    }
+    
+    public function getTabindex(): ?int
+    {
+        return $this->decorator->getTabindex();
+    }
+    
+    public function getLang(): ?string
+    {
+        return $this->decorator->getLang();
+    }
+    
+    public function getDir(): ?string
+    {
+        return $this->decorator->getDir();
+    }
+    
+    public function getRole(): ?string
+    {
+        return $this->decorator->getRole();
+    }
+    
+    public function isHidden(): ?bool
+    {
+        return $this->decorator->isHidden();
+    }
+    
+    public function isDraggable(): ?bool
+    {
+        return $this->decorator->isDraggable();
+    }
+    
+    public function isContenteditable(): ?bool
+    {
+        return $this->decorator->isContenteditable();
+    }
+    
+    public function isSpellcheck(): ?bool
+    {
+        return $this->decorator->isSpellcheck();
+    }
+    
+    public function getAriaLabel(): ?string
+    {
+        return $this->decorator->getAriaLabel();
+    }
+    
+    public function getAriaLabelledby(): ?string
+    {
+        return $this->decorator->getAriaLabelledby();
+    }
+    
+    public function getAriaDescribedBy(): ?string
+    {
+        return $this->decorator->getAriaDescribedBy();
+    }
+    
+    public function getAriaHidden(): ?string
+    {
+        return $this->decorator->getAriaHidden();
+    }
+    
+    public function getData(): array
+    {
+        return $this->decorator->getData();
+    }
+    
+    public function getAria(): array
+    {
+        return $this->decorator->getAria();
+    }
+
     public function alias(): ?string
     {
         return $this->decorator->alias();
@@ -123,7 +213,7 @@ class ComponentController extends AbstractController implements ComponentInterfa
 
     public function getService(string $class): mixed
     {
-        return $this->getService($class);
+        return $this->decorator->getService($class);
     }
 
     public function init(): void
