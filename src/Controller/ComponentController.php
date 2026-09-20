@@ -4,15 +4,15 @@ namespace EAdmin\Core\Controller;
 
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\Component\ComponentDecoratorInterface;
+use EAdmin\Core\Component\ComponentHelper;
 use EAdmin\Core\Component\ComponentInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Contracts\Service\Attribute\Required;
 
 class ComponentController extends AbstractController implements ComponentInterface, ComponentDecoratorInterface {
     private ComponentInterface $decorator;
 
-    #[Required]
-    public function di(): void {
+    public function __construct()
+    {
         $this->decorator = new Component();
     }
 
@@ -203,7 +203,7 @@ class ComponentController extends AbstractController implements ComponentInterfa
 
     public function template(): string
     {
-        return $this->decorator->template();
+        return ComponentHelper::getTemplate(static::class);
     }
 
     public function beforeRender(array $context, array $services): ?array
@@ -216,9 +216,9 @@ class ComponentController extends AbstractController implements ComponentInterfa
         return $this->decorator->getService($class);
     }
 
-    public function init(): void
+    public function init(array $context): ?array
     {
-        $this->decorator->init();
+        return $this->decorator->init($context);
     }
 
     public function styles(): array
@@ -239,11 +239,6 @@ class ComponentController extends AbstractController implements ComponentInterfa
     public function setSlots(array|ComponentInterface $slots): ComponentInterface
     {
         return $this->decorator->setSlots($slots);
-    }
-
-    public function updateContext(array $context): ?array
-    {
-        return $this->decorator->updateContext($context);
     }
 
     public function getDecorator(): ComponentInterface

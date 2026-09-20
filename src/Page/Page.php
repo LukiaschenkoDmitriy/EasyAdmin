@@ -4,6 +4,7 @@ namespace EAdmin\Core\Page;
 
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\Component\ComponentDecoratorInterface;
+use EAdmin\Core\Component\ComponentHelper;
 use EAdmin\Core\Component\ComponentInterface;
 use EAdmin\Core\Controller\PageController;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -15,7 +16,6 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
     public function boot(): void
     {
         $this->decorator = new Component();
-        $this->init();
     }
 
     public function services(): array
@@ -215,7 +215,7 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
 
     public function template(): string
     {
-        return $this->decorator->template();
+        return ComponentHelper::getTemplate(static::class);
     }
 
     public function beforeRender(array $context, array $services): ?array
@@ -228,9 +228,9 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
         return $this->decorator->getService($class);
     }
 
-    public function init(): void
+    public function init(array $context): ?array
     {
-        $this->decorator->init();
+        return $this->decorator->init($context);
     }
 
     public function styles(): array
@@ -251,11 +251,6 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
     public function setSlots(array|ComponentInterface $slots): ComponentInterface
     {
         return $this->decorator->setSlots($slots);
-    }
-
-    public function updateContext(array $context): ?array
-    {
-        return $this->decorator->updateContext($context);
     }
 
     public function getDecorator(): ComponentInterface

@@ -2,7 +2,7 @@
 
 namespace EAdmin\Core\Component;
 
-interface ComponentInterface
+interface ComponentInterface    
 {
     public function setId(?string $id): self;
 
@@ -91,11 +91,9 @@ interface ComponentInterface
 
     public function setSlots(array|ComponentInterface $slots): self;
 
-    public function init(): void;
+    public function init(array $context): ?array;
 
-    public function updateContext(array $context): array|null;
-
-    public function beforeRender(array $context, array $services): array|null;
+    public function beforeRender(array $context, array $services): ?array;
 
     public function getService(string $class): mixed;
 }

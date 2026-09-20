@@ -263,20 +263,19 @@ class Component implements ComponentInterface {
         return $this;
     }
 
-    public function init(): void
-    {
-        return;
-    }
-
-    public function updateContext(array $context): array|null
+    public function init(array $context): ?array
     {
         return null;
     }
 
-    public function beforeRender(array $context, array $services): array|null
+    public function beforeRender(array $context, array $services): array
     {
         $this->services = $services;
-        return $this->updateContext($context);
+        $contextChanges = $this->init($context);
+
+        if ($contextChanges != null) return $contextChanges;
+
+        return $context;
     }
 
     public function getService(string $class): mixed
