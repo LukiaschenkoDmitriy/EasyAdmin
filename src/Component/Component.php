@@ -271,11 +271,19 @@ class Component implements ComponentInterface {
     public function beforeRender(array $context, array $services): array
     {
         $this->services = $services;
-        $contextChanges = $this->init($context);
 
-        if ($contextChanges != null) return $contextChanges;
+        $plugin = $this->plugin($context);
+        $pluginData = $this->pluginData($context);
 
-        return $context;
+        if ($plugin) {
+            $this->setData([...$this->getData(), "plugin" => $plugin]);
+        }
+
+        if ($pluginData) {
+            $this->setData([...$this->getData(), "plugin-params" => json_encode($pluginData)]);
+        }
+
+        return $this->init($context) ?? $context;
     }
 
     public function getService(string $class): mixed
@@ -288,6 +296,16 @@ class Component implements ComponentInterface {
             }
         }
 
+        return null;
+    }
+
+    public function plugin(array $context): ?string
+    {
+        return null;
+    }
+
+    public function pluginData(array $context): ?array
+    {
         return null;
     }
 }

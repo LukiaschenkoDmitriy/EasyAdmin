@@ -222,6 +222,17 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
     {
         $this->decorator->beforeRender($context, $services);
 
+        $plugin = $this->plugin($context);
+        $pluginData = $this->pluginData($context);
+
+        if ($plugin) {
+            $this->setData([...$this->getData(), "plugin" => $plugin]);
+        }
+
+        if ($pluginData) {
+            $this->setData([...$this->getData(), "plugin-params" => json_encode($pluginData)]);
+        }
+
         return $this->init($context) ?? $context;
     }
 
@@ -258,5 +269,15 @@ class Page extends PageController implements PageInterface, ComponentInterface, 
     public function getDecorator(): ComponentInterface
     {
         return $this->decorator;
+    }
+
+    public function plugin(array $context): ?string
+    {
+        return null;
+    }
+
+    public function pluginData(array $context): ?array
+    {
+        return null;
     }
 }
