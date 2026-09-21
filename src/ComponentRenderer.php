@@ -14,30 +14,22 @@ class ComponentRenderer {
         $services = $slots instanceof PageInterface ? array_merge($slots->services(), $services) : $services;
         $context = $slots instanceof PageInterface ? array_merge($slots->context(), $context) : $context;
 
-        $context = $this->updateContext($slots, $context, $services);
-
         if (is_array($slots)) {
+            foreach ($slots as $component) {
+                $context = $this->updateContext($component, $context, $services);
+            }
+
             return implode("\n", array_map(fn(ComponentInterface $s) => $this->renderComponent($s, $context, $services), $slots));
         }
+
+        $context = $this->updateContext($slots, $context, $services);
 
         return $this->renderComponent($slots, $context, $services);
     }
 
-    private function updateContext(array|ComponentInterface $slots, array $context, array $services): array
+    public function updateContext(ComponentInterface $component, array $context, array $services): array
     {
-        if (is_array($slots)) {
-            /** @var ComponentInterface $component */
-            foreach ($slots as $component) {
-                $newContext = $component->beforeRender($context, $services);
-
-                if (!$newContext) continue;
-                $context = $newContext;
-            }
-
-            return $context;
-        }
-
-        return $slots->beforeRender($context, $services) ?? $context;
+        return $component->beforeRender($context, $services) ?? $context;
     }
 
     private function renderComponent(ComponentInterface $component, array $context = [], array $services = []): string
