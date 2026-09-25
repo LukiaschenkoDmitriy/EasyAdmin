@@ -4,8 +4,10 @@ use EAdmin\Core\Assets\AssetMapperResolver;
 use EAdmin\Core\Assets\AssetResolverInterface;
 use EAdmin\Core\Assets\ViteAssetResolver;
 use EAdmin\Core\Command\InitCommand;
+use EAdmin\Core\Command\SyncSearchIndexesCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
+use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\Twig\Extensions\AttributeExtension;
 use EAdmin\Core\Twig\Extensions\ScriptExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
@@ -25,6 +27,9 @@ return function (ContainerConfigurator $container): void {
     $services->set(ViteManifest::class)->arg('$viteConfig', param("eadmin.assets.vite"));
 
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
+    $services->set(SyncSearchIndexesCommand::class)->tag("console.command");
+
+    $services->set(IndexManager::class);
 
     $services->set(ScriptExtension::class)->tag("twig.extension");
     $services->set(StyleExtension::class)->tag("twig.extension");
