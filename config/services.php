@@ -17,6 +17,7 @@ use EAdmin\Core\Vite\ViteManifest;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return function (ContainerConfigurator $container): void {
     $services = $container->services()->defaults()->autoconfigure()->autowire();
@@ -28,7 +29,7 @@ return function (ContainerConfigurator $container): void {
     $services->set(ViteManifest::class)->arg('$viteConfig', param("eadmin.assets.vite"));
 
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
-    $services->set(SyncSearchIndexesCommand::class)->tag("console.command");
+    $services->set(SyncSearchIndexesCommand::class)->arg('$kernelDir', param("kernel.project_dir"))->tag("console.command");
 
     $services->set(IndexManager::class);
     $services->set(MappingBuilder::class);

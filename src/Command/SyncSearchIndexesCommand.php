@@ -13,7 +13,7 @@ use Symfony\Component\Finder\Finder;
 #[AsCommand(name: 'eadmin:elastic:index')]
 class SyncSearchIndexesCommand extends Command
 {
-    public function __construct(private IndexManager $indexManager)
+    public function __construct(private string $kernelDir, private IndexManager $indexManager)
     {
         parent::__construct();
     }
@@ -21,7 +21,7 @@ class SyncSearchIndexesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $finder = new Finder();
-        $finder->files()->in(__DIR__ . '/../Entity')->name('*.php');
+        $finder->files()->in($this->kernelDir . '/Entity')->name('*.php');
 
         foreach ($finder as $file) {
             $class = 'App\\Entity\\' . $file->getFilenameWithoutExtension();
