@@ -21,7 +21,7 @@ class SyncSearchIndexesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $finder = new Finder();
-        $finder->files()->in($this->kernelDir . '/Entity')->name('*.php');
+        $finder->files()->in($this->kernelDir . '/src/Entity')->name('*.php');
 
         foreach ($finder as $file) {
             $class = 'App\\Entity\\' . $file->getFilenameWithoutExtension();
