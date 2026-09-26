@@ -36,10 +36,12 @@ class DoctrineRepository implements RepositoryInterface {
 
         return new RepositoryResult(
             iterator_to_array($windowPage),
-            $windowPage->getTotalCount(),
-            $windowPage->getPageNumber(),
-            $windowPage->getPageCount(),
-            $windowPage->hasNextPage()
+            new RepositoryPagination(
+                $windowPage->getTotalCount(),
+                $windowPage->getPageNumber(),
+                $windowPage->getPageCount(),
+                $windowPage->hasNextPage()
+            )
         );
     }
 }
