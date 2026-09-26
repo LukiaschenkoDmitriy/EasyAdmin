@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand("eadmin:elastic:bulk")]
+#[AsCommand("eadmin:elastic:bulk", "Bulk elasticsearch indexes")]
 class BulkIndexesCommand extends Command {
     public function __construct(private ElasticService $service)
     {

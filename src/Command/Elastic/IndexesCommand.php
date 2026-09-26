@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'eadmin:elastic:index')]
+#[AsCommand(name: 'eadmin:elastic:index', "Create, update, delete elasticsearch indexes")]
 class IndexesCommand extends Command
 {
     public function __construct(private ElasticService $service)
