@@ -97,6 +97,6 @@ class ElasticService {
     }
 
     private static function getClassName(string $class): string {
-        return (new \ReflectionClass($class))->getName();
+        return (new \ReflectionClass($class))->getShortName();
     }
 }
