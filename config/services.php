@@ -6,6 +6,7 @@ use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Command\SyncSearchIndexesCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
+use EAdmin\Core\ElasticSearch\DocumentExtractor;
 use EAdmin\Core\ElasticSearch\ElasticSearchFactory;
 use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\ElasticSearch\MappingBuilder;
@@ -32,6 +33,7 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
     $services->set(SyncSearchIndexesCommand::class)->arg('$kernelDir', param("kernel.project_dir"))->tag("console.command");
+    $services->set(DocumentExtractor::class);
     $services->set(ElasticSearchFactory::class);
 
     $services->set(DoctrineRepository::class);

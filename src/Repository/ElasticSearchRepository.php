@@ -51,7 +51,7 @@ class ElasticSearchRepository implements RepositoryInterface {
             $order = self::ALLOWED_ORDERS[strtoupper($context->order)] ?? 'asc';
             $query->setSort([$context->sortingBy => ['order' => $order]]);
         } elseif ($context->searchBy === null) {
-            $query->setSort(['_doc' => ['order' => 'asc']]);
+            $query->setSort(['_id' => ['order' => 'asc']]);
         }
 
         $query->setFrom(($context->page - 1) * $context->limit);

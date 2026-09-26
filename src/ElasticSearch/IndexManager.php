@@ -2,6 +2,9 @@
 
 namespace EAdmin\Core\ElasticSearch;
 
+use Elastica\Bulk;
+use Elastica\Bulk\ResponseSet;
+use Elastica\Document;
 use Elastica\Mapping;
 use FOS\ElasticaBundle\Elastica\Client;
 
@@ -10,7 +13,13 @@ class IndexManager
     public function __construct(
         private Client $client,
         private MappingBuilder $mappingBuilder,
+        private DocumentExtractor $extractor
     ) {}
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
 
     public function createOrUpdateIndex(string $entityClass): void
     {
@@ -30,4 +39,45 @@ class IndexManager
         $mapping->setProperties($config['properties']);
         $mapping->send($index);
     }
+
+    public function bulkIndex(string $indexName, array $entities, callable $getId): int
+    {
+        if (empty($entities)) {
+            return 0;
+        }
+
+        $index = $this->client->getIndex($indexName);
+        $bulk = new Bulk($this->client);
+        $bulk->setIndex($index);
+
+        foreach ($entities as $entity) {
+            $data = $this->extractor->extract($entity);
+            $id = $getId($entity);
+
+            $bulk->addDocument(new Document((string) $id, $data));
+        }
+
+        $response = $bulk->send();
+
+        if ($response->hasError()) {
+            throw new \RuntimeException('Bulk indexing failed: ' . $this->collectBulkErrors($response));
+        }
+
+        $index->refresh();
+
+        return count($entities);
+    }
+
+    private function collectBulkErrors(ResponseSet $response): string
+    {
+        $errors = [];
+        foreach ($response->getBulkResponses() as $bulkResponse) {
+            if ($bulkResponse->hasError()) {
+                $errors[] = $bulkResponse->getErrorMessage();
+            }
+        }
+
+        return implode('; ', $errors);
+    }
+
 }
