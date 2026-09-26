@@ -7,6 +7,7 @@ use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Command\SyncSearchIndexesCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;
+use EAdmin\Core\ElasticSearch\ElasticSearchFactory;
 use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\ElasticSearch\MappingBuilder;
 use EAdmin\Core\Twig\Extensions\AttributeExtension;
@@ -30,6 +31,7 @@ return function (ContainerConfigurator $container): void {
 
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
     $services->set(SyncSearchIndexesCommand::class)->arg('$kernelDir', param("kernel.project_dir"))->tag("console.command");
+    $services->set(ElasticSearchFactory::class);
 
     $services->set(IndexManager::class);
     $services->set(MappingBuilder::class);
