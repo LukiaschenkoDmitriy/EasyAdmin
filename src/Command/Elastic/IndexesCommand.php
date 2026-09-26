@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EAdmin\Core\Command;
+namespace EAdmin\Core\Command\Elastic;
 
 use EAdmin\Core\Service\ElasticService;
 use Symfony\Component\Console\Attribute\AsCommand;

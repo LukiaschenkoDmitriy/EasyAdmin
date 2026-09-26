@@ -3,7 +3,7 @@
 use EAdmin\Core\Assets\AssetMapperResolver;
 use EAdmin\Core\Assets\ViteAssetResolver;
 use EAdmin\Core\Command\Elastic\BulkIndexesCommand;
-use EAdmin\Core\Command\IndexesCommand;
+use EAdmin\Core\Command\Elastic\IndexesCommand;
 use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Component\Component;
 use EAdmin\Core\ComponentRenderer;

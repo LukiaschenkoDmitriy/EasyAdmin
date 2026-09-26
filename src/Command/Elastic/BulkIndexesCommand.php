@@ -2,8 +2,6 @@
 
 namespace EAdmin\Core\Command\Elastic;
 
-use Doctrine\ORM\EntityManagerInterface;
-use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\Service\ElasticService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
