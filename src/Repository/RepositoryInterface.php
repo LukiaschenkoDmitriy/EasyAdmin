@@ -3,5 +3,5 @@
 namespace EAdmin\Core\Repository;
 
 interface RepositoryInterface {
-    public function get(string $entityClass, RepositoryContext $context, array $sortingFields, array $searchFields): mixed;
+    public function get(string $entityClass, RepositoryContext $context, array $sortingFields, array $searchFields): RepositoryResult;
 }

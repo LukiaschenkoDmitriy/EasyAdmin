@@ -8,7 +8,7 @@ use Doctrine\ORM\Tools\Pagination\Window;
 
 class DoctrineRepository implements RepositoryInterface {
     public function __construct(private EntityManagerInterface $manager) { }
-    public function get(string $entityClass, RepositoryContext $context, array $sortingFields, array $searchFields): mixed
+    public function get(string $entityClass, RepositoryContext $context, array $sortingFields, array $searchFields): RepositoryResult
     {
         $repository = $this->manager->getRepository($entityClass);
         $builder = $repository->createQueryBuilder('e');
@@ -34,6 +34,12 @@ class DoctrineRepository implements RepositoryInterface {
         $window = Window::fromPageNumberAndSize($context->page, $context->limit);
         $windowPage = (new OffsetPaginator())->paginate($builder->getQuery(), $window);
 
-        return iterator_to_array($windowPage);
+        return new RepositoryResult(
+            iterator_to_array($windowPage),
+            $windowPage->getTotalCount(),
+            $windowPage->getPageNumber(),
+            $windowPage->getPageCount(),
+            $windowPage->hasNextPage()
+        );
     }
 }
