@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use EAdmin\Core\Assets\AssetMapperResolver;
-use EAdmin\Core\Assets\AssetResolverInterface;
 use EAdmin\Core\Assets\ViteAssetResolver;
 use EAdmin\Core\Command\InitCommand;
 use EAdmin\Core\Command\SyncSearchIndexesCommand;
@@ -10,13 +9,14 @@ use EAdmin\Core\ComponentRenderer;
 use EAdmin\Core\ElasticSearch\ElasticSearchFactory;
 use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\ElasticSearch\MappingBuilder;
+use EAdmin\Core\Repository\DoctrineRepository;
 use EAdmin\Core\Twig\Extensions\AttributeExtension;
 use EAdmin\Core\Twig\Extensions\ScriptExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
 use EAdmin\Core\Twig\Extensions\StyleExtension;
 use EAdmin\Core\Vite\ViteManifest;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -32,6 +32,8 @@ return function (ContainerConfigurator $container): void {
     $services->set(InitCommand::class)->args([param("kernel.project_dir")])->tag('make.command');
     $services->set(SyncSearchIndexesCommand::class)->arg('$kernelDir', param("kernel.project_dir"))->tag("console.command");
     $services->set(ElasticSearchFactory::class);
+
+    $services->set(DoctrineRepository::class);
 
     $services->set(IndexManager::class);
     $services->set(MappingBuilder::class);

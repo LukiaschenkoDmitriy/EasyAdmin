@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "symfony/dependency-injection": "^8.1",
+        "doctrine/orm": "^3.7.2",
         "symfony/http-foundation": "^8.1",
         "symfony/http-kernel": "^8.1",
         "symfony/config": "^8.1",
