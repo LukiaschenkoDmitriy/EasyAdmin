@@ -3,11 +3,14 @@
 namespace EAdmin\Core\Repository;
 
 use EAdmin\Core\ElasticSearch\Attribute\SearchableEntity;
+use EAdmin\Core\ElasticSearch\Attribute\SearchField;
 use EAdmin\Core\ElasticSearch\ElasticSearchFactory;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MatchAll;
-use Elastica\Query\MatchQuery;
+use Elastica\Query\MultiMatch;
+use Elastica\Query\Term;
+use Elastica\Query\Wildcard;
 use Elastica\Result;
 use ReflectionClass;
 
@@ -31,14 +34,32 @@ class ElasticSearchRepository implements RepositoryInterface {
 
         $boolQuery = new BoolQuery();
 
-        if ($context->searchBy !== null && $context->search) {
-            if (!\in_array($context->searchBy, $searchFields, true)) {
-                throw new \InvalidArgumentException(sprintf('Field "%s" is not allowed for search.', $context->searchBy));
+        if ($context->search) {
+            [$textFields, $keywordFields, $numericFields] = $this->splitFieldsByType($entityClass, $searchFields);
+
+            $shouldQuery = new BoolQuery();
+            $hasAnyClause = false;
+
+            if (!empty($textFields)) {
+                $shouldQuery->addShould($this->buildTextSearchQuery($textFields, $context->search));
+                $hasAnyClause = true;
             }
 
-            $boolQuery->addMust(
-                (new MatchQuery())->setFieldQuery($context->searchBy, $context->search)->setFieldFuzziness($context->searchBy, 'AUTO')
-            );
+            if (!empty($keywordFields)) {
+                $shouldQuery->addShould($this->buildKeywordSearchQuery($keywordFields, $context->search));
+                $hasAnyClause = true;
+            }
+
+            foreach ($numericFields as $field) {
+                if (\ctype_digit($context->search)) {
+                    $shouldQuery->addShould(new Term([$field => (int) $context->search]));
+                    $hasAnyClause = true;
+                }
+            }
+
+            $shouldQuery->setMinimumShouldMatch(1);
+
+            $boolQuery->addMust($hasAnyClause ? $shouldQuery : new Term(['_index' => '__no_match__']));
         } else {
             $boolQuery->addMust(new MatchAll());
         }
@@ -93,5 +114,64 @@ class ElasticSearchRepository implements RepositoryInterface {
         $attribute = $attributes[0]->newInstance();
 
         return $attribute->indexName;
+    }
+
+    private function splitFieldsByType(string $entityClass, array $searchFields): array
+    {
+        $reflection = new \ReflectionClass($entityClass);
+        $textFields = [];
+        $keywordFields = [];
+        $numericFields = [];
+
+        foreach ($reflection->getProperties() as $property) {
+            if (!\in_array($property->getName(), $searchFields, true)) {
+                continue;
+            }
+
+            $attrs = $property->getAttributes(SearchField::class);
+            if (empty($attrs)) {
+                continue;
+            }
+
+            /** @var SearchField $field */
+            $field = $attrs[0]->newInstance();
+
+            match ($field->type) {
+                'text' => $textFields[] = $property->getName(),
+                'keyword' => $keywordFields[] = $property->getName(),
+                'integer', 'long', 'short', 'byte', 'float', 'double' => $numericFields[] = $property->getName(),
+                default => null,
+            };
+        }
+
+        return [$textFields, $keywordFields, $numericFields];
+    }
+
+    private function buildTextSearchQuery(array $textFields, string $search): BoolQuery
+    {
+        $shouldQuery = new BoolQuery();
+
+        $fuzzyMatch = new MultiMatch();
+        $fuzzyMatch->setQuery($search)->setFields($textFields)->setFuzziness('AUTO');
+        $shouldQuery->addShould($fuzzyMatch);
+
+        $prefixMatch = new MultiMatch();
+        $prefixMatch->setQuery($search)->setFields($textFields)->setType(MultiMatch::TYPE_PHRASE_PREFIX);
+        $shouldQuery->addShould($prefixMatch);
+
+        $shouldQuery->setMinimumShouldMatch(1);
+
+        return $shouldQuery;
+    }
+
+    private function buildKeywordSearchQuery(array $keywordFields, string $search): BoolQuery
+    {
+        $shouldQuery = new BoolQuery();
+
+        foreach ($keywordFields as $field) {
+            $shouldQuery->addShould(new Wildcard($field, '*' . strtolower($search) . '*'));
+        }
+
+        return $shouldQuery;
     }
 }
