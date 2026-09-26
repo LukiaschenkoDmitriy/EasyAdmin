@@ -10,6 +10,7 @@ use EAdmin\Core\ElasticSearch\ElasticSearchFactory;
 use EAdmin\Core\ElasticSearch\IndexManager;
 use EAdmin\Core\ElasticSearch\MappingBuilder;
 use EAdmin\Core\Repository\DoctrineRepository;
+use EAdmin\Core\Repository\ElasticSearchRepository;
 use EAdmin\Core\Twig\Extensions\AttributeExtension;
 use EAdmin\Core\Twig\Extensions\ScriptExtension;
 use EAdmin\Core\Twig\Extensions\SlotExtension;
@@ -34,6 +35,7 @@ return function (ContainerConfigurator $container): void {
     $services->set(ElasticSearchFactory::class);
 
     $services->set(DoctrineRepository::class);
+    $services->set(ElasticSearchRepository::class);
 
     $services->set(IndexManager::class);
     $services->set(MappingBuilder::class);
